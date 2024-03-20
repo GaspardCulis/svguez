@@ -1,21 +1,29 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import "leaflet/dist/leaflet.css"
+import Layout from "../layouts/Layout.astro";
+import "leaflet/dist/leaflet.css";
 ---
 
 <Layout title="Welcome to Astro.">
 	<div id="map"></div>
 	<script>
 		import L from "leaflet";
-	
-		let map = L.map('map').setView([51.505, -0.09], 13);
-	
-		L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			maxZoom: 19,
-			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-		}).addTo(map);
-	
-		var marker = L.marker([51.5, -0.09]).addTo(map);
+
+		let map = L.map("map", {
+			crs: L.CRS.Simple,
+			center: [30, 50],
+			zoom: 0.1,
+		});
+
+		const response = await fetch("/SRD.PCT.svg");
+		const svg = await response.text();
+
+		const svgElement = new DOMParser().parseFromString(svg, "image/svg+xml")
+			.documentElement as unknown as SVGElement;
+
+		new L.SVGOverlay(svgElement, [
+			[287, 710.5],
+			[-253, -569.5],
+		]).addTo(map);
 	</script>
 </Layout>
 <style>
