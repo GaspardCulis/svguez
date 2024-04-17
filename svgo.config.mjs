@@ -6,6 +6,7 @@ export default {
                 overrides: {
                     removeViewBox: false,
                     cleanupIds: false,
+                    removeUnknownsAndDefaults: false
                 },
             },
         },
