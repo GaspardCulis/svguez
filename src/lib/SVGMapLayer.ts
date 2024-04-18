@@ -28,8 +28,8 @@ export default class SVGMapLayer {
             const current_zoom = map.getZoom();
             this.updateVisibility(map);
             if (current_zoom >= this.zoom_level) {
-                this.paths.forEach((initialStrokeWidth, element) => {
-                    element.setAttribute(
+                this.paths.forEach((initialStrokeWidth, path) => {
+                    path.setAttribute(
                         "stroke-width",
                         `${initialStrokeWidth / Math.pow(current_zoom, 2)}`,
                     );
