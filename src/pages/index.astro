@@ -20,7 +20,8 @@ import "leaflet/dist/leaflet.css";
 			[-253, -569.5],
 		];
 
-		const layers = await Promise.all(
+		// Contruction des 3 SVGMapLayer à partir des 3 images ELECGEO
+		const layers: SVGMapLayer[] = await Promise.all(
 			[
 				{
 					zoom_level: 0,
@@ -40,6 +41,7 @@ import "leaflet/dist/leaflet.css";
 			].map(async (p) => await SVGMapLayer.from(p)),
 		);
 
+		// Ajout des layers à la carte
 		layers.forEach((layer) => layer.addTo(map));
 	</script>
 </Layout>
