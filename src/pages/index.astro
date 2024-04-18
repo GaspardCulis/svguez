@@ -7,7 +7,7 @@ import "leaflet/dist/leaflet.css";
 	<div id="map"></div>
 	<script>
 		import L from "leaflet";
-		import { loadSVG } from "../lib/utils";
+		import SVGMapLayer from "../lib/SVGMapLayer";
 
 		let map = L.map("map", {
 			crs: L.CRS.Simple,
@@ -15,34 +15,32 @@ import "leaflet/dist/leaflet.css";
 			zoom: 0.1,
 		});
 
-		const svgElement = await loadSVG("/elecgeo/ELECGEO.PCT.opti.svg");
-
-		console.info("Caching all SVGPathElements...");
-		const paths: Map<SVGPathElement, number> = new Map();
-		const t0 = performance.now();
-		svgElement
-			.querySelectorAll("path")
-			.forEach((e) =>
-				paths.set(e, parseInt(e.getAttribute("stroke-width") || "1")),
-			);
-		console.info(
-			`Loaded ${paths.size} SVGPathElements in ${performance.now() - t0}ms`,
-		);
-
-		map.on("zoomend", (_e) => {
-			const current_zoom = map.getZoom();
-			paths.forEach((initialStrokeWidth, element) => {
-				element.setAttribute(
-					"stroke-width",
-					`${initialStrokeWidth / Math.pow(current_zoom, 2)}`,
-				);
-			});
-		});
-
-		new L.SVGOverlay(svgElement, [
+		const bounds: L.LatLngBoundsExpression = [
 			[287, 710.5],
 			[-253, -569.5],
-		]).addTo(map);
+		];
+
+		const layers = await Promise.all(
+			[
+				{
+					zoom_level: 0,
+					path: "elecgeo/ELECGEO.PCT.opti.svg",
+					bounds,
+				},
+				{
+					zoom_level: 5,
+					path: "elecgeo/ELECGEO.PCT-Z18.opti.svg",
+					bounds,
+				},
+				{
+					zoom_level: 7,
+					path: "elecgeo/ELECGEO.PCT-Z100.opti.svg",
+					bounds,
+				},
+			].map(async (p) => await SVGMapLayer.from(p)),
+		);
+
+		layers.forEach((layer) => layer.addTo(map));
 	</script>
 </Layout>
 <style>
