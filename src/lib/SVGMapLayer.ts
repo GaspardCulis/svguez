@@ -10,6 +10,8 @@ export default class SVGMapLayer {
     readonly element: SVGElement,
     /** Le layer d'affichage du SVG qui sera ajouté dynamiquement à la {@link L.Map} */
     readonly overlay: L.SVGOverlay,
+    /** @readonly Propriété mise à jour en fonction de la présence ou non du {@link L.SVGOverlay} sur la carte */
+    public visible: boolean,
     /** Un cache contenant les références aux éléments `<path>` du SVG ainsi que la valeur initiale de leur attribut `stroke_width` */
     private paths: Map<SVGPathElement, number>
   ) {}
@@ -28,6 +30,7 @@ export default class SVGMapLayer {
   }): Promise<SVGMapLayer> {
     const { path, zoom_level, bounds } = params;
 
+    const visible = false;
     const element = await loadSVG(path);
     const overlay = new L.SVGOverlay(element, bounds);
     const paths: Map<SVGPathElement, number> = new Map();
@@ -38,7 +41,7 @@ export default class SVGMapLayer {
         paths.set(e, parseInt(e.getAttribute("stroke-width") || "1"))
       );
 
-    return new SVGMapLayer(zoom_level, element, overlay, paths);
+    return new SVGMapLayer(zoom_level, element, overlay, visible, paths);
   }
 
   /**
@@ -54,7 +57,7 @@ export default class SVGMapLayer {
       const current_zoom = map.getZoom();
       this.updateVisibility(map);
       // Mettre à jour les attributs `stroke-width` des éléments `<path>` uniquement si dans la plage de zoom visible
-      if (current_zoom >= this.zoom_level) {
+      if (this.visible) {
         this.paths.forEach((initialStrokeWidth, path) => {
           path.setAttribute(
             "stroke-width",
@@ -79,9 +82,11 @@ export default class SVGMapLayer {
     if (current_zoom >= this.zoom_level) {
       if (!map.hasLayer(this.overlay)) {
         this.overlay.addTo(map);
+        this.visible = true;
       }
     } else if (map.hasLayer(this.overlay)) {
       this.overlay.removeFrom(map);
+      this.visible = false;
     }
   }
 }
