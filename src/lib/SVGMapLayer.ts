@@ -74,11 +74,9 @@ export default class SVGMapLayer {
         if (current_zoom >= this.zoom_level) {
             if (!map.hasLayer(this.overlay)) {
                 this.overlay.addTo(map);
-                console.log("Added to map for zoom " + this.zoom_level)
             }
         } else if (map.hasLayer(this.overlay)) {
             this.overlay.removeFrom(map);
-            console.log("Removed from map for zoom " + this.zoom_level)
         }
     }
 }
