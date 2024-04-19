@@ -4,56 +4,56 @@ import "leaflet/dist/leaflet.css";
 ---
 
 <Layout title="Welcome to Astro.">
-	<div id="map"></div>
-	<script>
-		import L from "leaflet";
-		import SVGMapLayer from "../lib/SVGMapLayer";
+  <div id="map"></div>
+  <script>
+    import L from "leaflet";
+    import SVGMapLayer from "../lib/SVGMapLayer";
 
-		let map = L.map("map", {
-			crs: L.CRS.Simple,
-			center: [30, 50],
-			zoom: 0.1,
-		});
+    let map = L.map("map", {
+      crs: L.CRS.Simple,
+      center: [30, 50],
+      zoom: 0.1,
+    });
 
-		const bounds: L.LatLngBoundsExpression = [
-			[287, 710.5],
-			[-253, -569.5],
-		];
+    const bounds: L.LatLngBoundsExpression = [
+      [287, 710.5],
+      [-253, -569.5],
+    ];
 
-		// Construction des 3 SVGMapLayer à partir des 3 images ELECGEO
-		const layers: SVGMapLayer[] = await Promise.all(
-			[
-				{
-					zoom_level: 0,
-					path: "elecgeo/ELECGEO.PCT.opti.svg",
-					bounds,
-				},
-				{
-					zoom_level: 5,
-					path: "elecgeo/ELECGEO.PCT-Z100.opti.svg",
-					bounds,
-				},
-				{
-					zoom_level: 6,
-					path: "elecgeo/ELECGEO.PCT-Z18.opti.svg",
-					bounds,
-				},
-			].map(async (p) => await SVGMapLayer.from(p)),
-		);
+    // Construction des 3 SVGMapLayer à partir des 3 images ELECGEO
+    const layers: SVGMapLayer[] = await Promise.all(
+      [
+        {
+          zoom_level: 0,
+          path: "elecgeo/ELECGEO.PCT.opti.svg",
+          bounds,
+        },
+        {
+          zoom_level: 5,
+          path: "elecgeo/ELECGEO.PCT-Z100.opti.svg",
+          bounds,
+        },
+        {
+          zoom_level: 6,
+          path: "elecgeo/ELECGEO.PCT-Z18.opti.svg",
+          bounds,
+        },
+      ].map(async (p) => await SVGMapLayer.from(p))
+    );
 
-		// Ajout des layers à la carte
-		layers.forEach((layer) => layer.addTo(map));
-	</script>
+    // Ajout des layers à la carte
+    layers.forEach((layer) => layer.addTo(map));
+  </script>
 </Layout>
 <style>
-	#map {
-		width: 100%;
-		height: 100vh;
-	}
+  #map {
+    width: 100%;
+    height: 100vh;
+  }
 </style>
 <style is:global>
-	svg {
-		shape-rendering: optimizeSpeed;
-		text-rendering: optimizeSpeed;
-	}
+  svg {
+    shape-rendering: optimizeSpeed;
+    text-rendering: optimizeSpeed;
+  }
 </style>
