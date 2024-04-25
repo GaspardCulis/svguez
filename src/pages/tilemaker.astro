@@ -16,10 +16,6 @@ import Layout from "../layouts/Layout.astro";
     "svg-container"
   ) as HTMLDivElement;
 
-  const tile_container = document.getElementById(
-    "tile-container"
-  ) as HTMLDivElement;
-
   const svg = await loadSVG("elecgeo/ELECGEO.PCT.opti.svg");
   svg_container.appendChild(svg);
 
