@@ -5,40 +5,31 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="SVGuez TileMaker">
   Salut
   <div id="svg-container" class=""></div>
+  <div id="tile-container"></div>
 </Layout>
 <script>
-  import { loadSVG, intersects, filterSVG } from "../lib/utils";
+  import { createTile } from "../lib/tilemaker";
+  import { loadSVG } from "../lib/utils";
 
   const svg_container = document.getElementById(
     "svg-container"
   ) as HTMLDivElement;
 
+  const tile_container = document.getElementById(
+    "tile-container"
+  ) as HTMLDivElement;
+
   const svg = await loadSVG("elecgeo/ELECGEO.PCT.opti.svg");
   svg_container.appendChild(svg);
 
-  const tile_rect = new DOMRect(
-    0,
-    0,
-    svg.viewBox.baseVal.width / 2,
-    svg.viewBox.baseVal.height / 2
-  );
+  for (let y = 0; y < 5; y++) {
+    for (let x = 0; x < 5; x++) {
+      let croppped = createTile(svg, 0, x, y);
+      croppped.classList.add("tile");
 
-  let croppped = filterSVG(svg, (node) => {
-    if (node instanceof SVGGraphicsElement) {
-      const node_bbox = node.getBBox();
-      if (!intersects(tile_rect, node_bbox)) {
-        return false;
-      }
-
-      if (node_bbox.height < 5 && node_bbox.width < 5) {
-        return false;
-      }
+      tile_container.appendChild(croppped);
     }
-
-    return true;
-  });
-
-  svg_container.appendChild(croppped);
+  }
 </script>
 <style>
   #svg-container.hidden {
@@ -50,5 +41,11 @@ import Layout from "../layouts/Layout.astro";
     overflow: hidden;
     visibility: hidden;
     z-index: -100;
+  }
+</style>
+<style is:global>
+  .tile {
+    width: 256px;
+    height: 256px;
   }
 </style>
