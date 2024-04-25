@@ -8,8 +8,6 @@ import Layout from "../layouts/Layout.astro";
   <div id="tile-container"></div>
 </Layout>
 <script>
-  import JSZip from "jszip";
-  import { createTiles } from "../lib/tilemaker";
   import { loadSVG, saveBlob } from "../lib/utils";
 
   const svg_container = document.getElementById(
@@ -20,23 +18,17 @@ import Layout from "../layouts/Layout.astro";
     "tile-container"
   ) as HTMLDivElement;
 
-  const svg = await loadSVG("elecgeo/ELECGEO.PCT.opti.svg");
+  const svg = await loadSVG("cadgeo/CADGEO.PCT.svg");
   svg_container.appendChild(svg);
 
-  console.log("Creating tiles...");
-  const tiles = createTiles(svg, 3);
+  const worker = new Worker("../lib/worker.ts", { type: "module" });
 
-  // Save to zip
-  console.log("Saving to zip...");
-  const zip = new JSZip();
-  for (const [key, tile] of tiles) {
-    zip.file(key, tile.outerHTML);
-  }
-  console.log("Saved to zip");
+  worker.addEventListener("message", (event: MessageEvent<Blob>) => {
+    console.log("Saving blob...");
+    saveBlob(event.data, "tiles.zip");
+  });
 
-  const blob = await zip.generateAsync({ type: "blob" });
-
-  saveBlob(blob, "tiles.zip");
+  worker.postMessage(svg);
 </script>
 <style>
   #svg-container.hidden {
