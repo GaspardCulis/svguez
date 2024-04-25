@@ -39,24 +39,51 @@ export function createTile(
   return svg_tile;
 }
 
-export function createTiles(
+function createTilesChunked(
   svg: SVGSVGElement,
-  max_zoom: number
-): Map<string, SVGSVGElement> {
-  const out = new Map<string, SVGSVGElement>();
+  max_zoom: number,
+  tiles: Map<string, SVGSVGElement>,
+  resolve: (value: Map<string, SVGSVGElement>) => void,
+  x: number,
+  y: number,
+  z: number
+) {
+  if (z > max_zoom) {
+    resolve(tiles);
+    return;
+  }
   const initial_width = Math.ceil(svg.width.baseVal.value / BASE_TILE_SIZE);
   const initial_height = Math.ceil(svg.height.baseVal.value / BASE_TILE_SIZE);
 
-  for (let z = 0; z <= max_zoom; z++) {
-    for (let y = 0; y < initial_height * Math.pow(2, z); y++) {
-      for (let x = 0; x < initial_width * Math.pow(2, z); x++) {
-        let svg_tile = createTile(svg, z, x, y);
-        let key = `${z}/${x}/${y}.svg`;
-        out.set(key, svg_tile);
-        console.log(`Created tile ${key}`);
+  for (let i = 0; i < 10; i++) {
+    // Process 10 tiles at a time
+    let svg_tile = createTile(svg, z, x, y);
+    let key = `${z}/${x}/${y}.svg`;
+    tiles.set(key, svg_tile);
+    console.log(`Created tile ${key}`);
+
+    x++;
+    if (x >= initial_width * Math.pow(2, z)) {
+      x = 0;
+      y++;
+      if (y >= initial_height * Math.pow(2, z)) {
+        z++;
+        y = 0;
       }
     }
   }
 
-  return out;
+  requestAnimationFrame(() =>
+    createTilesChunked(svg, max_zoom, tiles, resolve, x, y, z)
+  );
+}
+
+export function createTiles(
+  svg: SVGSVGElement,
+  max_zoom: number
+): Promise<Map<string, SVGSVGElement>> {
+  const tiles = new Map<string, SVGSVGElement>();
+  return new Promise<Map<string, SVGSVGElement>>((resolve) => {
+    createTilesChunked(svg, max_zoom, tiles, resolve, 0, 0, 0);
+  });
 }

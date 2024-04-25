@@ -16,11 +16,11 @@ import Layout from "../layouts/Layout.astro";
     "svg-container"
   ) as HTMLDivElement;
 
-  const svg = await loadSVG("elecgeo/ELECGEO.PCT.opti.svg");
+  const svg = await loadSVG("cadgeo/CADGEO.PCT.svg");
   svg_container.appendChild(svg);
 
   console.log("Creating tiles...");
-  const tiles = createTiles(svg, 3);
+  const tiles = await createTiles(svg, 5);
 
   // Save to zip
   console.log("Saving to zip...");
