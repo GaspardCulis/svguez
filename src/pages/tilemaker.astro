@@ -8,8 +8,9 @@ import Layout from "../layouts/Layout.astro";
   <div id="tile-container"></div>
 </Layout>
 <script>
-  import { createTile } from "../lib/tilemaker";
-  import { loadSVG } from "../lib/utils";
+  import JSZip from "jszip";
+  import { createTiles } from "../lib/tilemaker";
+  import { loadSVG, saveBlob } from "../lib/utils";
 
   const svg_container = document.getElementById(
     "svg-container"
@@ -22,14 +23,20 @@ import Layout from "../layouts/Layout.astro";
   const svg = await loadSVG("elecgeo/ELECGEO.PCT.opti.svg");
   svg_container.appendChild(svg);
 
-  for (let y = 0; y < 5; y++) {
-    for (let x = 0; x < 5; x++) {
-      let croppped = createTile(svg, 0, x, y);
-      croppped.classList.add("tile");
+  console.log("Creating tiles...");
+  const tiles = createTiles(svg, 3);
 
-      tile_container.appendChild(croppped);
-    }
+  // Save to zip
+  console.log("Saving to zip...");
+  const zip = new JSZip();
+  for (const [key, tile] of tiles) {
+    zip.file(key, tile.outerHTML);
   }
+  console.log("Saved to zip");
+
+  const blob = await zip.generateAsync({ type: "blob" });
+
+  saveBlob(blob, "tiles.zip");
 </script>
 <style>
   #svg-container.hidden {
