@@ -7,8 +7,7 @@ import Layout from "../layouts/Layout.astro";
   <div id="svg-container" class=""></div>
 </Layout>
 <script>
-  import { loadSVG } from "../lib/utils";
-  import { cropSVG } from "../lib/tilemaker";
+  import { loadSVG, intersects, filterSVG } from "../lib/utils";
 
   const svg_container = document.getElementById(
     "svg-container"
@@ -24,7 +23,20 @@ import Layout from "../layouts/Layout.astro";
     svg.viewBox.baseVal.height / 2
   );
 
-  let croppped = cropSVG(svg, tile_rect);
+  let croppped = filterSVG(svg, (node) => {
+    if (node instanceof SVGGraphicsElement) {
+      const node_bbox = node.getBBox();
+      if (!intersects(tile_rect, node_bbox)) {
+        return false;
+      }
+
+      if (node_bbox.height < 5 && node_bbox.width < 5) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   svg_container.appendChild(croppped);
 </script>
