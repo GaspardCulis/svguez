@@ -2,7 +2,7 @@
   >Start</button
 >
 <script>
-  import { inputSVG, processing } from "../lib/store";
+  import { aDownloadElement, inputSVG, processing } from "../lib/store";
 
   const startButton = document.getElementById(
     "start-button"
@@ -12,9 +12,21 @@
   });
 
   startButton.addEventListener("click", (_e) => {
-    processing.set(true);
-    startButton.classList.remove("btn-accent");
-    startButton.classList.add("btn-info");
-    startButton.innerText = "Processing...";
+    if (!processing.get()) {
+      processing.set(true);
+      startButton.classList.remove("btn-accent");
+      startButton.classList.add("btn-info");
+      startButton.innerText = "Processing...";
+    } else if (aDownloadElement.get() != undefined) {
+      aDownloadElement.get()?.click();
+    }
+  });
+
+  aDownloadElement.subscribe((aElement) => {
+    if (aElement === undefined) return;
+    startButton.classList.remove("btn-info");
+    startButton.classList.add("btn-success");
+    startButton.innerText = "Download ZIP";
+    processing.set(false);
   });
 </script>
