@@ -7,7 +7,12 @@
   import JSZip from "jszip";
   import { createTiles } from "../lib/tilemaker";
   import { loadSVG, saveBlob } from "../lib/utils";
-  import { inputSVG, processing, settingsStore } from "../lib/store";
+  import {
+    inputSVG,
+    processing,
+    settingsStore,
+    statsStore,
+  } from "../lib/store";
 
   const svg_container = document.getElementById(
     "svg-container"
@@ -35,6 +40,7 @@
     console.log("Saved to zip");
 
     const blob = await zip.generateAsync({ type: "blob" });
+    statsStore.outputSize.set(blob.size);
 
     saveBlob(blob, "tiles.zip");
   });
