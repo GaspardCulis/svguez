@@ -27,7 +27,7 @@
 </div>
 <script>
   import { statsStore, settingsStore } from "../lib/store";
-  import { humanFileSize } from "../lib/utils";
+  import { humanCount, humanFileSize } from "../lib/utils";
 
   const statsCurrentZoom = document.getElementById("stats-zoom");
   const statsCurrentZoomProgress = document.getElementById(
@@ -59,7 +59,7 @@
 
   const statsTileCount = document.getElementById("stats-tile-count");
   const updateTileCountStats = () => {
-    statsTileCount!.innerText = `${statsStore.tileCount.get()} / ${statsStore.finalTilesCount.get()}`;
+    statsTileCount!.innerText = `${humanCount(statsStore.tileCount.get())} / ${humanCount(statsStore.finalTilesCount.get())}`;
   };
   statsStore.tileCount.subscribe(updateTileCountStats);
   statsStore.finalTilesCount.subscribe(updateTileCountStats);
