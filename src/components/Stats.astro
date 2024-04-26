@@ -22,7 +22,7 @@
   <div class="stat">
     <div class="stat-title">Output size</div>
     <div id="stats-size" class="stat-value">0Mb</div>
-    <div class="stat-desc"></div>
+    <div id="stats-tile-count" class="stat-desc">0/? tiles</div>
   </div>
 </div>
 <script>
@@ -37,7 +37,7 @@
   const updateZoomStats = () => {
     const currentZoom = statsStore.currentZoom.get();
     statsCurrentZoom!.innerText = `${currentZoom}`;
-    statsCurrentZoomProgress!.innerText = `${currentZoom}/${settingsStore.maxZoomLevel.get()}`;
+    statsCurrentZoomProgress!.innerText = `${currentZoom} / ${settingsStore.maxZoomLevel.get()}`;
   };
   statsStore.currentZoom.subscribe(updateZoomStats);
   settingsStore.maxZoomLevel.subscribe(updateZoomStats);
@@ -56,4 +56,11 @@
   statsStore.outputSize.subscribe((outputSize) => {
     statsSize!.innerText = humanFileSize(outputSize);
   });
+
+  const statsTileCount = document.getElementById("stats-tile-count");
+  const updateTileCountStats = () => {
+    statsTileCount!.innerText = `${statsStore.tileCount.get()} / ${statsStore.finalTilesCount.get()}`;
+  };
+  statsStore.tileCount.subscribe(updateTileCountStats);
+  statsStore.finalTilesCount.subscribe(updateTileCountStats);
 </script>
