@@ -76,6 +76,8 @@ function createTilesChunked(
     }
   }
 
+  // Stats
+  statsStore.currentZoom.set(z);
   statsStore.tileCount.set(tiles.size);
   statsStore.progress.set(
     (100 * tiles.size) / statsStore.finalTilesCount.get()
