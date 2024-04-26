@@ -34,10 +34,13 @@
     "stats-zoom-progress"
   );
 
-  statsStore.currentZoom.subscribe((currentZoom) => {
+  const updateZoomStats = () => {
+    const currentZoom = statsStore.currentZoom.get();
     statsCurrentZoom!.innerText = `${currentZoom}`;
     statsCurrentZoomProgress!.innerText = `${currentZoom}/${settingsStore.maxZoomLevel.get()}`;
-  });
+  };
+  statsStore.currentZoom.subscribe(updateZoomStats);
+  settingsStore.maxZoomLevel.subscribe(updateZoomStats);
 
   const statsProgressText = document.getElementById("stats-progress-text");
   const statsProgress = document.getElementById(
