@@ -59,7 +59,7 @@ function createTilesChunked(
   const initial_width = Math.ceil(svg.width.baseVal.value / base_tile_size);
   const initial_height = Math.ceil(svg.height.baseVal.value / base_tile_size);
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 20; i++) {
     // Process 10 tiles at a time
     let svg_tile = createTile(svg, z, x, y);
     let key = `${z}/${x}/${y}.svg`;
