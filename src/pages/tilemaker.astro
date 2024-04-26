@@ -1,4 +1,6 @@
 ---
+import Settings from "../components/Settings.astro";
+import Stats from "../components/Stats.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
@@ -27,36 +29,7 @@ import Layout from "../layouts/Layout.astro";
 
   <div class="flex w-full">
     <div class="grid flex-grow place-items-center">
-      <div class="prose w-[80%] p-12">
-        <h1>Settings</h1>
-        <h2>Max zoom level</h2>
-        <input
-          type="range"
-          min="0"
-          max="80"
-          value="10"
-          class="range"
-          step="10"
-        />
-        <div class="flex justify-between text-xs px-2">
-          <span>1</span>
-          <span>2</span>
-          <span>3</span>
-          <span>4</span>
-          <span>5</span>
-          <span>6</span>
-          <span>7</span>
-          <span>8</span>
-          <span>9</span>
-        </div>
-        <h2>Tile size</h2>
-        <select class="select select-bordered w-full max-w-xs">
-          <option value="128">128x128px</option>
-          <option value="256" selected>256x256px</option>
-          <option value="512">512x512px</option>
-          <option value="1024">1024x1024px</option>
-        </select>
-      </div>
+      <Settings />
     </div>
 
     <div class="divider divider-horizontal">
@@ -64,33 +37,12 @@ import Layout from "../layouts/Layout.astro";
     </div>
 
     <div class="grid flex-grow place-items-center">
-      <div class="stats stats-vertical shadow">
-        <div class="stat">
-          <div class="stat-title">Current zoom level</div>
-          <div class="stat-value">4</div>
-          <div class="stat-desc">4/8</div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-title">Progress</div>
-          <div class="stat-value">40%</div>
-          <progress
-            class="progress progress-secondary w-56"
-            value="40"
-            max="100"></progress>
-        </div>
-
-        <div class="stat">
-          <div class="stat-title">New Registers</div>
-          <div class="stat-value">1,200</div>
-          <div class="stat-desc">↘︎ 90 (14%)</div>
-        </div>
-      </div>
+      <Stats />
     </div>
   </div>
   <div
     id="svg-container"
-    class="invisible absolute overflow-hidden top-0 left-0 w-screen h-screen -z-50"
+    class="absolute overflow-hidden top-0 left-0 w-screen h-screen -z-50"
   >
   </div>
 </Layout>
