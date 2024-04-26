@@ -2,7 +2,13 @@
   >Start</button
 >
 <script>
-  import { aDownloadElement, inputSVG, processing } from "../lib/store";
+  import {
+    aDownloadElement,
+    inputSVG,
+    processing,
+    statsStore,
+  } from "../lib/store";
+  import { humanFileSize } from "../lib/utils";
 
   const startButton = document.getElementById(
     "start-button"
@@ -26,7 +32,7 @@
     if (aElement === undefined) return;
     startButton.classList.remove("btn-info");
     startButton.classList.add("btn-success");
-    startButton.innerText = "Download ZIP";
+    startButton.innerText = `Download ZIP (${humanFileSize(statsStore.outputSize.get())})`;
     processing.set(false);
   });
 </script>
