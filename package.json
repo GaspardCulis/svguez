@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.8",
-    "@types/maplibre-gl": "^1.14.0"
+    "@types/maplibre-gl": "^1.14.0",
+    "daisyui": "^4.10.2"
   }
 }
