@@ -8,5 +8,5 @@ export const settingsStore = {
 export const statsStore = {
   currentZoom: atom(0),
   progress: atom(0.0),
-  outputSize: atom(0.0),
+  outputSize: atom(0),
 };
