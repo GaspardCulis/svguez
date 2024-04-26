@@ -30,10 +30,13 @@
   import { humanCount } from "../lib/utils";
 
   const statsCurrentZoom = document.getElementById("stats-zoom");
+  statsStore.currentZoom.subscribe((currentZoom) => {
+    statsCurrentZoom!.innerText = `${currentZoom}`;
+  });
+
   const statsCurrentZoomProgress = document.getElementById(
     "stats-zoom-progress"
   );
-
   settingsStore.maxZoomLevel.subscribe((maxZoomLevel) => {
     statsCurrentZoomProgress!.innerText = ` / ${maxZoomLevel}`;
   });
