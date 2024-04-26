@@ -72,3 +72,13 @@ export function humanFileSize(size: number): string {
     ["B", "kB", "MB", "GB", "TB"][i]
   );
 }
+
+export function humanCount(count: number): string {
+  console.log("humancount: ", count);
+  var i = count == 0 ? 0 : Math.floor(Math.log(count) / Math.log(1000));
+  return (
+    +(count / Math.pow(1000, i)).toFixed(2) * 1 +
+    " " +
+    ["", "K", "M", "G", "T"][i]
+  );
+}
