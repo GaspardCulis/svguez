@@ -24,8 +24,10 @@ An attempt at making a fast Lynx
 
 ### Installation
 
+SVGO doit être installé comme dépendance dans le répertoire de ce projet car NPM doit appliquer le patch `patches/svgo+x.x.x.patch`. Installez donc les dépendances du projet avec la commande :
+
 ```sh
-npm install svgo
+npm install
 ```
 
 ### Utilisation
