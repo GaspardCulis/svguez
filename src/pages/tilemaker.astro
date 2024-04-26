@@ -3,9 +3,28 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="SVGuez TileMaker">
-  Salut
-  <div id="svg-container" class=""></div>
-  <div id="tile-container"></div>
+  <div class="hero bg-base-200">
+    <div class="w-full hero-content flex-col lg:flex-row-reverse lg:space-x-24">
+      <img src="/favicon.svg" class="max-w-sm rounded-lg shadow-2xl" />
+      <div>
+        <h1 class="text-5xl font-bold">SVGuez TileMaker</h1>
+        <p class="py-6">
+          The best way to split your bulky un-optimized crappy SVG image to
+          highly performant LeafletJS compatible tiles!
+        </p>
+        <input
+          type="file"
+          class="file-input file-input-bordered w-full max-w-sm"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="svg-container"
+    class="absolute invisible left-0 top-0 w-screen h-screen overflow-hidden -z-50"
+  >
+  </div>
 </Layout>
 <script>
   import JSZip from "jszip";
@@ -16,11 +35,12 @@ import Layout from "../layouts/Layout.astro";
     "svg-container"
   ) as HTMLDivElement;
 
-  const svg = await loadSVG("cadgeo/CADGEO.PCT.svg");
+  const svg = await loadSVG("elecgeo/ELECGEO.PCT.opti.svg");
   svg_container.appendChild(svg);
 
+  /*
   console.log("Creating tiles...");
-  const tiles = await createTiles(svg, 5);
+  const tiles = await createTiles(svg, 3);
 
   // Save to zip
   console.log("Saving to zip...");
@@ -33,22 +53,5 @@ import Layout from "../layouts/Layout.astro";
   const blob = await zip.generateAsync({ type: "blob" });
 
   saveBlob(blob, "tiles.zip");
+  */
 </script>
-<style>
-  #svg-container.hidden {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    visibility: hidden;
-    z-index: -100;
-  }
-</style>
-<style is:global>
-  .tile {
-    width: 256px;
-    height: 256px;
-  }
-</style>
