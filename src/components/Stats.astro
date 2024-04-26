@@ -20,27 +20,23 @@
   </div>
 
   <div class="stat">
-    <div class="stat-title">Output size</div>
-    <div id="stats-size" class="stat-value">0Mb</div>
-    <div id="stats-tile-count" class="stat-desc">0/? tiles</div>
+    <div class="stat-title">Tile count</div>
+    <div id="stats-tile-count" class="stat-value">0</div>
+    <div id="stats-tile-count-progress" class="stat-desc">0/?</div>
   </div>
 </div>
 <script>
   import { statsStore, settingsStore } from "../lib/store";
-  import { humanCount, humanFileSize } from "../lib/utils";
+  import { humanCount } from "../lib/utils";
 
   const statsCurrentZoom = document.getElementById("stats-zoom");
   const statsCurrentZoomProgress = document.getElementById(
     "stats-zoom-progress"
   );
 
-  const updateZoomStats = () => {
-    const currentZoom = statsStore.currentZoom.get();
-    statsCurrentZoom!.innerText = `${currentZoom}`;
-    statsCurrentZoomProgress!.innerText = `${currentZoom} / ${settingsStore.maxZoomLevel.get()}`;
-  };
-  statsStore.currentZoom.subscribe(updateZoomStats);
-  settingsStore.maxZoomLevel.subscribe(updateZoomStats);
+  settingsStore.maxZoomLevel.subscribe((maxZoomLevel) => {
+    statsCurrentZoomProgress!.innerText = ` / ${maxZoomLevel}`;
+  });
 
   const statsProgressText = document.getElementById("stats-progress-text");
   const statsProgress = document.getElementById(
@@ -52,15 +48,15 @@
     statsProgress.value = progress;
   });
 
-  const statsSize = document.getElementById("stats-size");
-  statsStore.outputSize.subscribe((outputSize) => {
-    statsSize!.innerText = humanFileSize(outputSize);
+  const statsTileCount = document.getElementById("stats-tile-count");
+  statsStore.tileCount.subscribe((tileCount) => {
+    statsTileCount!.innerText = `${humanCount(tileCount)}`;
   });
 
-  const statsTileCount = document.getElementById("stats-tile-count");
-  const updateTileCountStats = () => {
-    statsTileCount!.innerText = `${humanCount(statsStore.tileCount.get())} / ${humanCount(statsStore.finalTilesCount.get())}`;
-  };
-  statsStore.tileCount.subscribe(updateTileCountStats);
-  statsStore.finalTilesCount.subscribe(updateTileCountStats);
+  const statsTileCountProgress = document.getElementById(
+    "stats-tile-count-progress"
+  );
+  statsStore.finalTilesCount.subscribe((finalTilesCount) => {
+    statsTileCountProgress!.innerText = ` / ${humanCount(finalTilesCount)}`;
+  });
 </script>
