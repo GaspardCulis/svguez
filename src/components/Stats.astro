@@ -5,20 +5,52 @@
 <div class="stats stats-vertical shadow">
   <div class="stat">
     <div class="stat-title">Current zoom level</div>
-    <div class="stat-value">0</div>
-    <div class="stat-desc">0/?</div>
+    <div id="stats-zoom" class="stat-value">0</div>
+    <div id="stats-zoom-progress" class="stat-desc">0/?</div>
   </div>
 
   <div class="stat">
     <div class="stat-title">Progress</div>
-    <div class="stat-value">0%</div>
-    <progress class="progress progress-secondary w-56" value="0" max="100"
-    ></progress>
+    <div id="stats-progress-text" class="stat-value">0%</div>
+    <progress
+      id="stats-progress"
+      class="progress progress-secondary w-56"
+      value="0"
+      max="100"></progress>
   </div>
 
   <div class="stat">
     <div class="stat-title">Output size</div>
-    <div class="stat-value">0Mb</div>
+    <div id="stats-size" class="stat-value">0Mb</div>
     <div class="stat-desc"></div>
   </div>
 </div>
+<script>
+  import { statsStore, settingsStore } from "../lib/store";
+  import { humanFileSize } from "../lib/utils";
+
+  const statsCurrentZoom = document.getElementById("stats-zoom");
+  const statsCurrentZoomProgress = document.getElementById(
+    "stats-zoom-progress"
+  );
+
+  statsStore.currentZoom.subscribe((currentZoom) => {
+    statsCurrentZoom!.innerText = `${currentZoom}`;
+    statsCurrentZoomProgress!.innerText = `${currentZoom}/${settingsStore.maxZoomLevel.get()}`;
+  });
+
+  const statsProgressText = document.getElementById("stats-progress-text");
+  const statsProgress = document.getElementById(
+    "stats-progress"
+  ) as HTMLProgressElement;
+
+  statsStore.progress.subscribe((progress) => {
+    statsProgressText!.innerText = `${progress.toFixed(1)}%`;
+    statsProgress.value = progress;
+  });
+
+  const statsSize = document.getElementById("stats-size");
+  statsStore.outputSize.subscribe((outputSize) => {
+    statsSize!.innerText = humanFileSize(outputSize);
+  });
+</script>
