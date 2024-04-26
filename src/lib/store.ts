@@ -1,8 +1,8 @@
 import { atom } from "nanostores";
 
 export const settingsStore = {
-  maxZoomLevel: atom(2),
-  tileSize: atom(256),
+  maxZoomLevel: atom(4),
+  tileSize: atom(1024),
 };
 
 export const statsStore = {
