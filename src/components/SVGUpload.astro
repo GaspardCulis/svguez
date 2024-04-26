@@ -1,0 +1,31 @@
+<input
+  id="file-upload"
+  type="file"
+  accept="image/svg+xml"
+  class="file-input file-input-bordered w-full max-w-sm"
+/>
+<script>
+  import { inputSVG } from "../lib/store";
+
+  const upload_input = document.getElementById(
+    "file-upload"
+  ) as HTMLInputElement;
+
+  upload_input.addEventListener("change", handleFiles, false);
+  function handleFiles(this: HTMLInputElement) {
+    const file = this.files?.item(0)!;
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      var parser = new DOMParser();
+      var svg = parser.parseFromString(
+        e.target?.result as string,
+        "image/svg+xml"
+      ).documentElement as unknown as SVGSVGElement;
+
+      inputSVG.set(svg);
+    };
+
+    reader.readAsText(file);
+  }
+</script>

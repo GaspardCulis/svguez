@@ -10,3 +10,5 @@ export const statsStore = {
   progress: atom(0.0),
   outputSize: atom(0),
 };
+
+export const inputSVG = atom<SVGSVGElement | undefined>(undefined);

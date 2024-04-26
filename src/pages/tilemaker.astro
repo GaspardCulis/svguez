@@ -1,4 +1,5 @@
 ---
+import SVGUpload from "../components/SVGUpload.astro";
 import Settings from "../components/Settings.astro";
 import Stats from "../components/Stats.astro";
 import Layout from "../layouts/Layout.astro";
@@ -17,12 +18,7 @@ import Layout from "../layouts/Layout.astro";
           The best way to split your bulky un-optimized crappy SVG image to
           highly performant LeafletJS compatible tiles!
         </p>
-        <input
-          id="file-upload"
-          type="file"
-          accept="image/svg+xml"
-          class="file-input file-input-bordered w-full max-w-sm"
-        />
+        <SVGUpload />
       </div>
     </div>
   </div>
@@ -54,28 +50,6 @@ import Layout from "../layouts/Layout.astro";
   const svg_container = document.getElementById(
     "svg-container"
   ) as HTMLObjectElement;
-  const upload_input = document.getElementById(
-    "file-upload"
-  ) as HTMLInputElement;
-
-  upload_input.addEventListener("change", handleFiles, false);
-  function handleFiles(this: HTMLInputElement) {
-    const fileList = this.files;
-    const file = this.files?.item(0);
-    console.log(file);
-    if (!(file?.type == "image/svg+xml")) {
-      console.error("Please gimme SVG");
-      return;
-    }
-
-    let reader = new FileReader();
-
-    reader.onload = function (e) {
-      svg_container.data = e.target?.result;
-    };
-
-    reader.readAsDataURL(file);
-  }
 
   /*
   const svg = await loadSVG("elecgeo/ELECGEO.PCT.opti.svg");
