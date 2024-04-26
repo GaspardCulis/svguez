@@ -1,6 +1,5 @@
+import { settingsStore } from "./store";
 import { filterSVG, intersects } from "./utils";
-
-const BASE_TILE_SIZE = 256;
 
 export function createTile(
   svg: SVGSVGElement,
@@ -8,7 +7,8 @@ export function createTile(
   x: number,
   y: number
 ): SVGSVGElement {
-  let tile_size = BASE_TILE_SIZE / Math.pow(2, z);
+  const base_tile_size = settingsStore.tileSize.get();
+  let tile_size = base_tile_size / Math.pow(2, z);
 
   let min_size = tile_size / 100;
 
@@ -55,8 +55,9 @@ function createTilesChunked(
     resolve(tiles);
     return;
   }
-  const initial_width = Math.ceil(svg.width.baseVal.value / BASE_TILE_SIZE);
-  const initial_height = Math.ceil(svg.height.baseVal.value / BASE_TILE_SIZE);
+  const base_tile_size = settingsStore.tileSize.get();
+  const initial_width = Math.ceil(svg.width.baseVal.value / base_tile_size);
+  const initial_height = Math.ceil(svg.height.baseVal.value / base_tile_size);
 
   for (let i = 0; i < 10; i++) {
     // Process 10 tiles at a time
