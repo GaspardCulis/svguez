@@ -20,14 +20,17 @@ export function createTile(
 
       if (!intersects(bbox, element_bbox)) {
         return false;
-      }
-
-      if (element_bbox.height < min_size || element_bbox.width < min_size) {
+      } else if (
+        element_bbox.height < min_size ||
+        element_bbox.width < min_size
+      ) {
         return false;
+      } else {
+        return true;
       }
     }
 
-    return true;
+    return false;
   });
 
   // Update viewport
