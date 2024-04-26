@@ -64,7 +64,6 @@ function createTilesChunked(
     let svg_tile = createTile(svg, z, x, y);
     let key = `${z}/${x}/${y}.svg`;
     tiles.set(key, svg_tile);
-    console.log(`Created tile ${key}`);
 
     x++;
     if (x >= initial_width * Math.pow(2, z)) {
