@@ -3,6 +3,7 @@ import SVGUpload from "../components/SVGUpload.astro";
 import Settings from "../components/Settings.astro";
 import StartButton from "../components/StartButton.astro";
 import Stats from "../components/Stats.astro";
+import TileMaker from "../components/TileMaker.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
@@ -37,41 +38,8 @@ import Layout from "../layouts/Layout.astro";
       <Stats />
     </div>
   </div>
-  <div
-    id="svg-container"
-    class="absolute overflow-hidden top-0 left-0 w-screen h-screen -z-50"
-  >
-  </div>
+  <TileMaker />
 </Layout>
-<script>
-  import JSZip from "jszip";
-  import { createTiles } from "../lib/tilemaker";
-  import { loadSVG, saveBlob } from "../lib/utils";
-
-  const svg_container = document.getElementById(
-    "svg-container"
-  ) as HTMLObjectElement;
-
-  /*
-  const svg = await loadSVG("elecgeo/ELECGEO.PCT.opti.svg");
-  svg_container.appendChild(svg);
-
-  console.log("Creating tiles...");
-  const tiles = await createTiles(svg, 3);
-
-  // Save to zip
-  console.log("Saving to zip...");
-  const zip = new JSZip();
-  for (const [key, tile] of tiles) {
-    zip.file(key, tile.outerHTML);
-  }
-  console.log("Saved to zip");
-
-  const blob = await zip.generateAsync({ type: "blob" });
-
-  saveBlob(blob, "tiles.zip");
-  */
-</script>
 <style is:global>
   html {
     height: 100vh;

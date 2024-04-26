@@ -1,0 +1,41 @@
+<div
+  id="svg-container"
+  class="absolute invisible overflow-hidden top-0 left-0 w-screen h-screen -z-50"
+>
+</div>
+<script>
+  import JSZip from "jszip";
+  import { createTiles } from "../lib/tilemaker";
+  import { loadSVG, saveBlob } from "../lib/utils";
+  import { inputSVG, processing, settingsStore } from "../lib/store";
+
+  const svg_container = document.getElementById(
+    "svg-container"
+  ) as HTMLDivElement;
+
+  processing.subscribe(async (started) => {
+    if (!started) return;
+    const svg = inputSVG.get();
+    if (!(svg instanceof SVGSVGElement)) {
+      console.error("Started processing without valid SVG");
+      return;
+    }
+    svg_container.appendChild(inputSVG.get()!);
+
+    console.log("Creating tiles...");
+
+    const tiles = await createTiles(svg, settingsStore.maxZoomLevel.get());
+
+    // Save to zip
+    console.log("Saving to zip...");
+    const zip = new JSZip();
+    for (const [key, tile] of tiles) {
+      zip.file(key, tile.outerHTML);
+    }
+    console.log("Saved to zip");
+
+    const blob = await zip.generateAsync({ type: "blob" });
+
+    saveBlob(blob, "tiles.zip");
+  });
+</script>
