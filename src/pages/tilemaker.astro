@@ -5,7 +5,10 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="SVGuez TileMaker">
   <div class="hero bg-base-200">
     <div class="w-full hero-content flex-col lg:flex-row-reverse lg:space-x-24">
-      <img src="/favicon.svg" class="max-w-sm rounded-lg shadow-2xl" />
+      <object
+        type="image/svg+xml"
+        data="/favicon.svg"
+        class="max-w-sm rounded-lg shadow-2xl"></object>
       <div>
         <h1 class="text-5xl font-bold">SVGuez TileMaker</h1>
         <p class="py-6">
@@ -13,6 +16,7 @@ import Layout from "../layouts/Layout.astro";
           highly performant LeafletJS compatible tiles!
         </p>
         <input
+          id="file-upload"
           type="file"
           class="file-input file-input-bordered w-full max-w-sm"
         />
@@ -20,9 +24,72 @@ import Layout from "../layouts/Layout.astro";
     </div>
   </div>
 
+  <div class="flex w-full">
+    <div class="grid flex-grow place-items-center">
+      <div class="prose w-[80%] p-12">
+        <h1>Settings</h1>
+        <h2>Max zoom level</h2>
+        <input
+          type="range"
+          min="0"
+          max="80"
+          value="10"
+          class="range"
+          step="10"
+        />
+        <div class="flex justify-between text-xs px-2">
+          <span>1</span>
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+          <span>5</span>
+          <span>6</span>
+          <span>7</span>
+          <span>8</span>
+          <span>9</span>
+        </div>
+        <h2>Tile size</h2>
+        <select class="select select-bordered w-full max-w-xs">
+          <option value="128">128x128px</option>
+          <option value="256" selected>256x256px</option>
+          <option value="512">512x512px</option>
+          <option value="1024">1024x1024px</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="divider divider-horizontal">
+      <button class="btn btn-accent m-auto -translate-x-6">Start</button>
+    </div>
+
+    <div class="grid flex-grow place-items-center">
+      <div class="stats stats-vertical shadow">
+        <div class="stat">
+          <div class="stat-title">Current zoom level</div>
+          <div class="stat-value">4</div>
+          <div class="stat-desc">4/8</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-title">Progress</div>
+          <div class="stat-value">40%</div>
+          <progress
+            class="progress progress-secondary w-56"
+            value="40"
+            max="100"></progress>
+        </div>
+
+        <div class="stat">
+          <div class="stat-title">New Registers</div>
+          <div class="stat-value">1,200</div>
+          <div class="stat-desc">↘︎ 90 (14%)</div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div
     id="svg-container"
-    class="absolute invisible left-0 top-0 w-screen h-screen overflow-hidden -z-50"
+    class="invisible absolute overflow-hidden top-0 left-0 w-screen h-screen -z-50"
   >
   </div>
 </Layout>
@@ -33,12 +100,34 @@ import Layout from "../layouts/Layout.astro";
 
   const svg_container = document.getElementById(
     "svg-container"
-  ) as HTMLDivElement;
+  ) as HTMLObjectElement;
+  const upload_input = document.getElementById(
+    "file-upload"
+  ) as HTMLInputElement;
 
+  upload_input.addEventListener("change", handleFiles, false);
+  function handleFiles(this: HTMLInputElement) {
+    const fileList = this.files;
+    const file = this.files?.item(0);
+    console.log(file);
+    if (!(file?.type == "image/svg+xml")) {
+      console.error("Please gimme SVG");
+      return;
+    }
+
+    let reader = new FileReader();
+
+    reader.onload = function (e) {
+      svg_container.data = e.target?.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  /*
   const svg = await loadSVG("elecgeo/ELECGEO.PCT.opti.svg");
   svg_container.appendChild(svg);
 
-  /*
   console.log("Creating tiles...");
   const tiles = await createTiles(svg, 3);
 
@@ -55,3 +144,13 @@ import Layout from "../layouts/Layout.astro";
   saveBlob(blob, "tiles.zip");
   */
 </script>
+<style is:global>
+  html {
+    height: 100vh;
+  }
+
+  body {
+    display: block;
+    height: 100%;
+  }
+</style>
