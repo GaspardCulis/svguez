@@ -19,3 +19,19 @@ An attempt at making a fast Lynx
 ### Backend
 
 - **pctSvg**: Ne plus utiliser la balise `<style>svg { background-color: #333333; }</style>` mais plutôt l'attribut `style="background-color: #333333"`
+
+## Utiliser SVGO
+
+### Installation
+
+```sh
+npm install svgo
+```
+
+### Utilisation
+
+A executer dans le même répertoire que `svgo.config.mjs` pour conserver les ID et RRN
+
+```
+npx svgo chemin_svg_entree.svg -o chemin_svg_sortie.svg
+```
