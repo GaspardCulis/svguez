@@ -12,3 +12,5 @@ export const statsStore = {
 };
 
 export const inputSVG = atom<SVGSVGElement | undefined>(undefined);
+
+export const processing = atom(false);

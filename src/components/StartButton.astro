@@ -1,0 +1,22 @@
+<button
+  id="start-button"
+  class="btn btn-accent m-auto -translate-x-6"
+  disabled="disabled">Start</button
+>
+<script>
+  import { inputSVG, processing } from "../lib/store";
+
+  const startButton = document.getElementById(
+    "start-button"
+  ) as HTMLButtonElement;
+  inputSVG.subscribe((svg) => {
+    startButton.disabled = !(svg instanceof SVGSVGElement);
+  });
+
+  startButton.addEventListener("click", (_e) => {
+    processing.set(true);
+    startButton.classList.remove("btn-accent");
+    startButton.classList.add("btn-info");
+    startButton.innerText = "Processing...";
+  });
+</script>
