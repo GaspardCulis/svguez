@@ -6,6 +6,7 @@
   <h1>Settings</h1>
   <h2>Max zoom level</h2>
   <input
+    id="max-zoom-input"
     type="range"
     min="0"
     max="80"
@@ -25,10 +26,41 @@
     <span>9</span>
   </div>
   <h2>Tile size</h2>
-  <select class="select select-bordered w-full max-w-xs">
+  <select id="tile-size-select" class="select select-bordered w-full max-w-xs">
     <option value="128">128x128px</option>
     <option value="256" selected>256x256px</option>
     <option value="512">512x512px</option>
     <option value="1024">1024x1024px</option>
   </select>
 </div>
+<script>
+  import { settingsStore } from "../lib/store";
+
+  const maxZoomInput = document.getElementById(
+    "max-zoom-input"
+  ) as HTMLInputElement;
+  maxZoomInput.value = `${10 * (settingsStore.maxZoomLevel.get() - 1)}`;
+  maxZoomInput.addEventListener("change", (_e) => {
+    let maxZoom = parseInt(maxZoomInput.value) / 10 + 1;
+    settingsStore.maxZoomLevel.set(maxZoom);
+  });
+
+  const tileSizeSelect = document.getElementById(
+    "tile-size-select"
+  ) as HTMLSelectElement;
+  let index = 0;
+  for (const option of tileSizeSelect.options) {
+    if (parseInt(option.value) == settingsStore.tileSize.get()) {
+      tileSizeSelect.options.selectedIndex = index;
+      break;
+    }
+
+    index++;
+  }
+  tileSizeSelect.addEventListener("change", (_e) => {
+    const tileSize = tileSizeSelect.options.item(
+      tileSizeSelect.selectedIndex
+    )!.value;
+    settingsStore.tileSize.set(parseInt(tileSize));
+  });
+</script>
