@@ -1,3 +1,5 @@
+import { aDownloadElement } from "./store";
+
 export async function loadSVG(name: string): Promise<SVGSVGElement> {
   const response = await fetch(`/svg/${name}`);
   const svg = await response.text();
@@ -59,9 +61,13 @@ export function saveBlob(blob: Blob, filename: string) {
   a.download = filename;
 
   document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  a.addEventListener("click", (_e) => {
+    document.body.removeChild(a);
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 1000);
+  });
+  aDownloadElement.set(a);
 }
 
 export function humanFileSize(size: number): string {
@@ -74,7 +80,6 @@ export function humanFileSize(size: number): string {
 }
 
 export function humanCount(count: number): string {
-  console.log("humancount: ", count);
   var i = count == 0 ? 0 : Math.floor(Math.log(count) / Math.log(1000));
   return (
     +(count / Math.pow(1000, i)).toFixed(2) * 1 +
