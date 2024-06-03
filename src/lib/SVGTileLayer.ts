@@ -11,16 +11,17 @@ export default class SVGTileLayer extends L.GridLayer {
     const tile = L.DomUtil.create("div", "leaflet-tile");
 
     // Load SVG aynchronoulsy
-    this._loadSVG(coords).then((svg) => {
-      if (svg instanceof SVGSVGElement) {
-        if (coords.z !== 0) {
+    this._loadSVG(coords)
+      .then((svg) => {
+        if (svg instanceof SVGSVGElement) {
           svg.style.width = "100%";
           svg.style.height = "100%";
+
+          tile.appendChild(svg);
         }
-        tile.appendChild(svg);
-      }
-      done(undefined, tile);
-    });
+        done(undefined, tile);
+      })
+      .catch(() => null);
 
     // Return temporary tile
     return tile;
@@ -28,7 +29,9 @@ export default class SVGTileLayer extends L.GridLayer {
 
   private async _loadSVG(coords: L.Coords): Promise<HTMLElement | null> {
     const { x, y, z } = coords;
-    const url = new URL(`http://localhost:8080/${z}/${x}/${y}.svg`);
+    const url = new URL(
+      `${document.location.origin}/svguez/svg/elecgeo/tiles/${z}/${x}/${y}.svg`
+    );
 
     const response = await fetch(url);
     if (response.status === 200) {
