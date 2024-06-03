@@ -22,7 +22,7 @@ class SVGTile {
 }
 
 export default class SVGTileLayer extends L.GridLayer {
-  private tiles = new Map<L.Coords, SVGTile>();
+  private tiles = new Map<string, SVGTile>();
   private current_zoom: number = 0;
 
   constructor() {
@@ -44,7 +44,7 @@ export default class SVGTileLayer extends L.GridLayer {
 
           const svgTile = new SVGTile(svg);
           svgTile.updateStrokes(this.current_zoom);
-          this.tiles.set(coords, svgTile);
+          this.tiles.set(coords.toString(), svgTile);
           tile.appendChild(svg);
         }
         done(undefined, tile);
@@ -71,7 +71,7 @@ export default class SVGTileLayer extends L.GridLayer {
   }
 
   private _onTileRemove(event: L.TileEvent) {
-    this.tiles.delete(event.coords);
+    this.tiles.delete(event.coords.toString());
   }
 
   private async _loadSVG(coords: L.Coords): Promise<HTMLElement | null> {
