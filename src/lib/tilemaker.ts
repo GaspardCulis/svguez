@@ -10,7 +10,7 @@ export function createTile(
   const base_tile_size = settingsStore.tileSize.get();
   let tile_size = base_tile_size / Math.pow(2, z);
 
-  let min_size = tile_size / 100;
+  let min_size = tile_size / 512;
 
   const bbox = new DOMRect(x * tile_size, y * tile_size, tile_size, tile_size);
 
