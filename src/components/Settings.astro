@@ -36,7 +36,7 @@
   </select>
 </div>
 <script>
-  import { settingsStore } from "../lib/store";
+  import { settingsStore, processing } from "../lib/store";
 
   const maxZoomInput = document.getElementById(
     "max-zoom-input"
@@ -64,5 +64,10 @@
       tileSizeSelect.selectedIndex
     )!.value;
     settingsStore.tileSize.set(parseInt(tileSize));
+  });
+
+  processing.subscribe((isProcessing) => {
+    maxZoomInput.disabled = isProcessing;
+    tileSizeSelect.disabled = isProcessing;
   });
 </script>
