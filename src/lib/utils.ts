@@ -17,6 +17,21 @@ export function intersects(rect_a: DOMRect, rect_b: DOMRect): boolean {
   );
 }
 
+export function computeFinalTileCount(
+  tile_size: number,
+  max_zoom: number,
+  svg_size: { width: number; height: number }
+): number {
+  const initial_width = Math.ceil(svg_size.width / tile_size);
+  const initial_height = Math.ceil(svg_size.height / tile_size);
+
+  let totalTiles = 0;
+  for (let z = 0; z <= max_zoom; z++) {
+    totalTiles += initial_width * initial_height * Math.pow(2, 2 * z);
+  }
+  return totalTiles;
+}
+
 function filterSVGworker(
   elements: NodeListOf<ChildNode>,
   new_element: SVGElement,
