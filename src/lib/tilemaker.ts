@@ -5,7 +5,7 @@ export function createTile(
   svg: SVGSVGElement,
   z: number,
   x: number,
-  y: number
+  y: number,
 ): SVGSVGElement {
   const base_tile_size = settingsStore.tileSize.get();
   let tile_size = base_tile_size / Math.pow(2, z);
@@ -36,7 +36,7 @@ export function createTile(
   // Update viewport
   svg_tile.setAttribute(
     "viewBox",
-    `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
+    `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`,
   );
 
   return svg_tile;
@@ -49,7 +49,7 @@ function createTilesChunked(
   resolve: (value: Map<string, SVGSVGElement>) => void,
   x: number,
   y: number,
-  z: number
+  z: number,
 ) {
   if (z > max_zoom) {
     resolve(tiles);
@@ -60,7 +60,7 @@ function createTilesChunked(
   const initial_height = Math.ceil(svg.height.baseVal.value / base_tile_size);
 
   for (let i = 0; i < 20; i++) {
-    // Process 10 tiles at a time
+    // Process 20 tiles at a time
     let svg_tile = createTile(svg, z, x, y);
     let key = `${z}/${x}/${y}.svg`;
     tiles.set(key, svg_tile);
@@ -80,17 +80,17 @@ function createTilesChunked(
   statsStore.currentZoom.set(z);
   statsStore.tileCount.set(tiles.size);
   statsStore.progress.set(
-    (100 * tiles.size) / statsStore.finalTilesCount.get()
+    (100 * tiles.size) / statsStore.finalTilesCount.get(),
   );
 
   requestAnimationFrame(() =>
-    createTilesChunked(svg, max_zoom, tiles, resolve, x, y, z)
+    createTilesChunked(svg, max_zoom, tiles, resolve, x, y, z),
   );
 }
 
 export function createTiles(
   svg: SVGSVGElement,
-  max_zoom: number
+  max_zoom: number,
 ): Promise<Map<string, SVGSVGElement>> {
   const tiles = new Map<string, SVGSVGElement>();
 
