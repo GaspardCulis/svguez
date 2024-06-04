@@ -5,10 +5,10 @@
   class="file-input file-input-bordered w-full max-w-sm"
 />
 <script>
-  import { inputSVG } from "../lib/store";
+  import { inputSVG, processing } from "../lib/store";
 
   const upload_input = document.getElementById(
-    "file-upload"
+    "file-upload",
   ) as HTMLInputElement;
 
   upload_input.addEventListener("change", handleFiles, false);
@@ -20,12 +20,16 @@
       var parser = new DOMParser();
       var svg = parser.parseFromString(
         e.target?.result as string,
-        "image/svg+xml"
+        "image/svg+xml",
       ).documentElement as unknown as SVGSVGElement;
 
       inputSVG.set(svg);
     };
 
     reader.readAsText(file);
+
+    processing.listen((isProcessing) => {
+      upload_input.disabled = isProcessing;
+    });
   }
 </script>
