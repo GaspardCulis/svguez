@@ -15,7 +15,7 @@ class SVGTile {
     this.paths.forEach((initialStrokeWidth, path) => {
       path.setAttribute(
         "stroke-width",
-        `${initialStrokeWidth / Math.pow(zoom, 2)}` // Formule à revoir
+        `${initialStrokeWidth / Math.pow(2, zoom)}` // Formule à revoir
       );
     });
   }
