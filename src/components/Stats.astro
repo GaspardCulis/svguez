@@ -26,8 +26,28 @@
   </div>
 </div>
 <script>
-  import { statsStore, settingsStore } from "../lib/store";
-  import { humanCount } from "../lib/utils";
+  import { statsStore, settingsStore, inputSVG } from "../lib/store";
+  import { computeFinalTileCount, humanCount } from "../lib/utils";
+
+  // Update stats based on settings change
+  const updateFinalTileCount = () => {
+    const svg = inputSVG.get();
+    if (svg instanceof SVGSVGElement) {
+      statsStore.finalTilesCount.set(
+        computeFinalTileCount(
+          settingsStore.tileSize.get(),
+          settingsStore.maxZoomLevel.get(),
+          {
+            width: svg.width.baseVal.value,
+            height: svg.height.baseVal.value,
+          }
+        )
+      );
+    }
+  };
+  settingsStore.maxZoomLevel.subscribe(updateFinalTileCount);
+  settingsStore.tileSize.subscribe(updateFinalTileCount);
+  inputSVG.subscribe(updateFinalTileCount);
 
   const statsCurrentZoom = document.getElementById("stats-zoom");
   statsStore.currentZoom.subscribe((currentZoom) => {

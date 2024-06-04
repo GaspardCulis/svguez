@@ -93,15 +93,6 @@ export function createTiles(
   max_zoom: number
 ): Promise<Map<string, SVGSVGElement>> {
   const tiles = new Map<string, SVGSVGElement>();
-  const base_tile_size = settingsStore.tileSize.get();
-  const initial_width = Math.ceil(svg.width.baseVal.value / base_tile_size);
-  const initial_height = Math.ceil(svg.height.baseVal.value / base_tile_size);
-
-  let totalTiles = 0;
-  for (let z = 0; z <= max_zoom; z++) {
-    totalTiles += initial_width * initial_height * Math.pow(2, 2 * z);
-  }
-  statsStore.finalTilesCount.set(totalTiles);
 
   return new Promise<Map<string, SVGSVGElement>>((resolve) => {
     createTilesChunked(svg, max_zoom, tiles, resolve, 0, 0, 0);
