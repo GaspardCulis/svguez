@@ -34,12 +34,24 @@
     <option value="2048">2048x2048px</option>
     <option value="4096">4096x4096px</option>
   </select>
+  <h2>Extras</h2>
+  <div class="form-control">
+    <label class="label cursor-pointer">
+      <span class="label-text">Include everything on final zoom layer</span>
+      <input
+        id="keep-final-input"
+        type="checkbox"
+        class="toggle toggle-success"
+        checked
+      />
+    </label>
+  </div>
 </div>
 <script>
   import { settingsStore, processing } from "../lib/store";
 
   const maxZoomInput = document.getElementById(
-    "max-zoom-input"
+    "max-zoom-input",
   ) as HTMLInputElement;
   maxZoomInput.value = `${10 * (settingsStore.maxZoomLevel.get() - 1)}`;
   maxZoomInput.addEventListener("change", (_e) => {
@@ -48,7 +60,7 @@
   });
 
   const tileSizeSelect = document.getElementById(
-    "tile-size-select"
+    "tile-size-select",
   ) as HTMLSelectElement;
   let index = 0;
   for (const option of tileSizeSelect.options) {
@@ -61,9 +73,17 @@
   }
   tileSizeSelect.addEventListener("change", (_e) => {
     const tileSize = tileSizeSelect.options.item(
-      tileSizeSelect.selectedIndex
+      tileSizeSelect.selectedIndex,
     )!.value;
     settingsStore.tileSize.set(parseInt(tileSize));
+  });
+
+  const keepFinalInput = document.getElementById(
+    "keep-final-input",
+  ) as HTMLInputElement;
+  keepFinalInput.checked = settingsStore.keepFinal.get();
+  keepFinalInput.addEventListener("toggle", (_e) => {
+    settingsStore.keepFinal.set(keepFinalInput.checked);
   });
 
   processing.subscribe((isProcessing) => {

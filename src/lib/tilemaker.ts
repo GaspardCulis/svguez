@@ -6,11 +6,13 @@ export function createTile(
   z: number,
   x: number,
   y: number,
+  max_zoom: number,
 ): SVGSVGElement {
   const base_tile_size = settingsStore.tileSize.get();
   let tile_size = base_tile_size / Math.pow(2, z);
 
-  let min_size = tile_size / 512;
+  const checkSize = !(z === max_zoom && settingsStore.keepFinal.get());
+  const min_size = tile_size / 512;
 
   const bbox = new DOMRect(x * tile_size, y * tile_size, tile_size, tile_size);
 
@@ -21,12 +23,10 @@ export function createTile(
 
       if (!intersects(bbox, element_bbox)) {
         return false;
-      } else {
+      } else if (checkSize) {
         // Compute bbox with more precise but expensive `getBoundingClientRect` method for width and height checking
         element_bbox = element.getBoundingClientRect();
-        if (element_bbox.height < min_size || element_bbox.width < min_size) {
-          return false;
-        } else {
+        if (element_bbox.height >= min_size && element_bbox.width >= min_size) {
           return true;
         }
       }
@@ -63,7 +63,7 @@ function createTilesChunked(
 
   for (let i = 0; i < 20; i++) {
     // Process 20 tiles at a time
-    let svg_tile = createTile(svg, z, x, y);
+    let svg_tile = createTile(svg, z, x, y, max_zoom);
     let key = `${z}/${x}/${y}.svg`;
     tiles.set(key, svg_tile);
 
