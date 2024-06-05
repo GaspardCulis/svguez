@@ -117,10 +117,10 @@ export function humanDuration(seconds: number): string {
   for (var i = 0, max = levels.length; i < max; i++) {
     if (levels[i][0] === 0) continue;
     returntext +=
-      Math.round(levels[i][0] as number) +
+      levels[i][0] +
       (levels[i][0] === 1
         ? // @ts-ignore
-          levels[i][1].substr(0, levels[i][1].length - 1)
+          levels[i][1].substr(0, levels[i][1].length)
         : levels[i][1]);
   }
   return returntext.trim();
