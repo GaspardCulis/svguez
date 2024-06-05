@@ -53,10 +53,6 @@ function createTilesChunked(
   y: number,
   z: number,
 ) {
-  if (z > max_zoom) {
-    resolve(tiles);
-    return;
-  }
   const base_tile_size = settingsStore.tileSize.get();
   const initial_width = Math.ceil(svg.width.baseVal.value / base_tile_size);
   const initial_height = Math.ceil(svg.height.baseVal.value / base_tile_size);
@@ -73,6 +69,10 @@ function createTilesChunked(
       y++;
       if (y >= initial_height * Math.pow(2, z)) {
         z++;
+        if (z > max_zoom) {
+          resolve(tiles);
+          return;
+        }
         y = 0;
       }
     }
