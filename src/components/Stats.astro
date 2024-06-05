@@ -37,6 +37,7 @@
     settingsStore,
     inputSVG,
     processing,
+    aDownloadElement,
   } from "../lib/store";
   import {
     computeFinalTileCount,
@@ -113,7 +114,7 @@
     );
     statsProcessingSpeed.innerText = `${humanCount(processingSpeed)} tiles/s`;
 
-    if (statsStore.progress.get() < 100) {
+    if (aDownloadElement.get() === undefined) {
       setTimeout(updateProcessingStats, 900);
     }
   };
