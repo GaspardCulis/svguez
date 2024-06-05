@@ -24,10 +24,25 @@
     <div id="stats-tile-count" class="stat-value">0</div>
     <div id="stats-tile-count-progress" class="stat-desc">0/?</div>
   </div>
+
+  <div class="stat">
+    <div class="stat-title">Processing time</div>
+    <div id="stats-processing-time" class="stat-value">0s</div>
+    <div id="stats-processing-speed" class="stat-desc">0 tiles/s</div>
+  </div>
 </div>
 <script>
-  import { statsStore, settingsStore, inputSVG } from "../lib/store";
-  import { computeFinalTileCount, humanCount } from "../lib/utils";
+  import {
+    statsStore,
+    settingsStore,
+    inputSVG,
+    processing,
+  } from "../lib/store";
+  import {
+    computeFinalTileCount,
+    humanCount,
+    humanDuration,
+  } from "../lib/utils";
 
   // Update stats based on settings change
   const updateFinalTileCount = () => {
@@ -40,8 +55,8 @@
           {
             width: svg.width.baseVal.value,
             height: svg.height.baseVal.value,
-          }
-        )
+          },
+        ),
       );
     }
   };
@@ -55,7 +70,7 @@
   });
 
   const statsCurrentZoomProgress = document.getElementById(
-    "stats-zoom-progress"
+    "stats-zoom-progress",
   );
   settingsStore.maxZoomLevel.subscribe((maxZoomLevel) => {
     statsCurrentZoomProgress!.innerText = ` / ${maxZoomLevel}`;
@@ -63,7 +78,7 @@
 
   const statsProgressText = document.getElementById("stats-progress-text");
   const statsProgress = document.getElementById(
-    "stats-progress"
+    "stats-progress",
   ) as HTMLProgressElement;
 
   statsStore.progress.subscribe((progress) => {
@@ -77,9 +92,36 @@
   });
 
   const statsTileCountProgress = document.getElementById(
-    "stats-tile-count-progress"
+    "stats-tile-count-progress",
   );
   statsStore.finalTilesCount.subscribe((finalTilesCount) => {
     statsTileCountProgress!.innerText = ` / ${humanCount(finalTilesCount)}`;
+  });
+
+  let processingT0 = new Date();
+  const statsProcessingTime = document.getElementById("stats-processing-time")!;
+  const statsProcessingSpeed = document.getElementById(
+    "stats-processing-speed",
+  )!;
+
+  const updateProcessingStats = () => {
+    const processingTime =
+      (new Date().getTime() - processingT0.getTime()) / 1000;
+    statsProcessingTime.innerText = humanDuration(processingTime);
+    const processingSpeed = Math.round(
+      statsStore.tileCount.get() / processingTime,
+    );
+    statsProcessingSpeed.innerText = `${humanCount(processingSpeed)} tiles/s`;
+
+    if (processing.get()) {
+      setTimeout(updateProcessingStats, 900);
+    }
+  };
+
+  processing.subscribe((isProcessing) => {
+    if (isProcessing) {
+      processingT0 = new Date();
+      updateProcessingStats();
+    }
   });
 </script>
