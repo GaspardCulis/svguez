@@ -12,10 +12,11 @@ import "leaflet/dist/leaflet.css";
       crs: L.CRS.Simple,
       center: [0, 0],
       zoom: 0.1,
+      wheelPxPerZoomLevel: 600,
     });
 
     L.tileLayer("http://localhost:8080/{z}/{x}/{y}.svg", {
-      tileSize: 1024,
+      tileSize: 4096,
     }).addTo(map);
   </script>
 </Layout>
