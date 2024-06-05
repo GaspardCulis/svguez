@@ -20,7 +20,7 @@ export function intersects(rect_a: DOMRect, rect_b: DOMRect): boolean {
 export function computeFinalTileCount(
   tile_size: number,
   max_zoom: number,
-  svg_size: { width: number; height: number }
+  svg_size: { width: number; height: number },
 ): number {
   const initial_width = Math.ceil(svg_size.width / tile_size);
   const initial_height = Math.ceil(svg_size.height / tile_size);
@@ -35,7 +35,7 @@ export function computeFinalTileCount(
 function filterSVGworker(
   elements: NodeListOf<ChildNode>,
   new_element: SVGElement,
-  predicate: (element: ChildNode) => boolean
+  predicate: (element: ChildNode) => boolean,
 ) {
   for (let element of elements) {
     if (predicate(element)) {
@@ -46,7 +46,7 @@ function filterSVGworker(
         filterSVGworker(
           element.childNodes as NodeListOf<SVGGraphicsElement>,
           new_node as SVGElement,
-          predicate
+          predicate,
         );
       }
 
@@ -59,7 +59,7 @@ function filterSVGworker(
 
 export function filterSVG(
   element: SVGSVGElement & SVGGraphicsElement,
-  predicate: (element: ChildNode) => boolean
+  predicate: (element: ChildNode) => boolean,
 ): SVGSVGElement {
   let out = element.cloneNode(false) as SVGSVGElement;
 
@@ -101,4 +101,27 @@ export function humanCount(count: number): string {
     " " +
     ["", "K", "M", "G", "T"][i]
   );
+}
+
+// https://stackoverflow.com/a/34270811
+export function humanDuration(seconds: number): string {
+  var levels = [
+    [Math.floor(seconds / 31536000), "y"],
+    [Math.floor((seconds % 31536000) / 86400), "d"],
+    [Math.floor(((seconds % 31536000) % 86400) / 3600), "h"],
+    [Math.floor((((seconds % 31536000) % 86400) % 3600) / 60), "m"],
+    [(((seconds % 31536000) % 86400) % 3600) % 60, "s"],
+  ];
+  var returntext = "";
+
+  for (var i = 0, max = levels.length; i < max; i++) {
+    if (levels[i][0] === 0) continue;
+    returntext +=
+      Math.round(levels[i][0] as number) +
+      (levels[i][0] === 1
+        ? // @ts-ignore
+          levels[i][1].substr(0, levels[i][1].length - 1)
+        : levels[i][1]);
+  }
+  return returntext.trim();
 }
