@@ -110,7 +110,7 @@ export function humanDuration(seconds: number): string {
     [Math.floor((seconds % 31536000) / 86400), "d"],
     [Math.floor(((seconds % 31536000) % 86400) / 3600), "h"],
     [Math.floor((((seconds % 31536000) % 86400) % 3600) / 60), "m"],
-    [(((seconds % 31536000) % 86400) % 3600) % 60, "s"],
+    [Math.floor(((seconds % 31536000) % 86400) % 3600) % 60, "s"],
   ];
   var returntext = "";
 
