@@ -113,7 +113,7 @@
     );
     statsProcessingSpeed.innerText = `${humanCount(processingSpeed)} tiles/s`;
 
-    if (processing.get()) {
+    if (statsStore.progress.get() < 100) {
       setTimeout(updateProcessingStats, 900);
     }
   };
