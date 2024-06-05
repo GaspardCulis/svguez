@@ -26,13 +26,13 @@ export function createTile(
       } else if (checkSize) {
         // Compute bbox with more precise but expensive `getBoundingClientRect` method for width and height checking
         element_bbox = element.getBoundingClientRect();
-        if (element_bbox.height >= min_size && element_bbox.width >= min_size) {
-          return true;
+        if (element_bbox.height < min_size && element_bbox.width < min_size) {
+          return false;
         }
       }
     }
 
-    return false;
+    return true;
   });
 
   // Update viewport
