@@ -92,7 +92,7 @@
     "keep-final-input",
   ) as HTMLInputElement;
   keepFinalInput.checked = settingsStore.keepFinal.get();
-  keepFinalInput.addEventListener("toggle", (_e) => {
+  keepFinalInput.addEventListener("change", (_e) => {
     settingsStore.keepFinal.set(keepFinalInput.checked);
   });
 
@@ -100,7 +100,7 @@
     "remove-small-input"
   ) as HTMLInputElement;
   removeSmallInput.checked = settingsStore.removeSmall.get();
-  removeSmallInput.addEventListener("toggle", (_e) => {
+  removeSmallInput.addEventListener("change", (_e) => {
     settingsStore.removeSmall.set(removeSmallInput.checked);
   });
 
