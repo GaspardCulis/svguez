@@ -4,8 +4,11 @@
   accept="image/svg+xml"
   class="file-input file-input-bordered w-full max-w-sm"
 />
+<p id="status-text" class="m-2 text-xs"></p>
 <script>
   import { inputSVG, processing } from "../lib/store";
+
+  const status_text = document.getElementById("status-text") as HTMLParagraphElement;
 
   const optimizeWorker = new Worker("../lib/svgo.ts", { type: "module" });
   optimizeWorker.onmessage = (e) => {
@@ -17,8 +20,10 @@
       "image/svg+xml",
     ).documentElement as unknown as SVGSVGElement;
 
+    status_text.innerText = "";
     inputSVG.set(svg);
   };
+
 
   const upload_input = document.getElementById(
     "file-upload",
@@ -31,6 +36,7 @@
 
     reader.onload = function (e) {
       const content = e.target?.result as string;
+      status_text.innerText = "Optimizing SVG with SVGO...";
       optimizeWorker.postMessage(content);
     };
 
