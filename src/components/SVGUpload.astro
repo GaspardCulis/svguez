@@ -7,6 +7,19 @@
 <script>
   import { inputSVG, processing } from "../lib/store";
 
+  const optimizeWorker = new Worker("../lib/svgo.ts", { type: "module" });
+  optimizeWorker.onmessage = (e) => {
+    console.log("SVG optimized!");
+    const optimizedSvgContent = e.data
+    const parser = new DOMParser();
+    const svg = parser.parseFromString(
+      optimizedSvgContent,
+      "image/svg+xml",
+    ).documentElement as unknown as SVGSVGElement;
+
+    inputSVG.set(svg);
+  };
+
   const upload_input = document.getElementById(
     "file-upload",
   ) as HTMLInputElement;
@@ -14,22 +27,18 @@
   upload_input.addEventListener("change", handleFiles, false);
   function handleFiles(this: HTMLInputElement) {
     const file = this.files?.item(0)!;
-    var reader = new FileReader();
+    const reader = new FileReader();
 
     reader.onload = function (e) {
-      var parser = new DOMParser();
-      var svg = parser.parseFromString(
-        e.target?.result as string,
-        "image/svg+xml",
-      ).documentElement as unknown as SVGSVGElement;
-
-      inputSVG.set(svg);
+      const content = e.target?.result as string;
+      optimizeWorker.postMessage(content);
     };
 
     reader.readAsText(file);
 
-    processing.listen((isProcessing) => {
-      upload_input.disabled = isProcessing;
-    });
   }
+
+  processing.listen((isProcessing) => {
+    upload_input.disabled = isProcessing;
+  });
 </script>
