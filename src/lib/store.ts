@@ -4,6 +4,7 @@ export const settingsStore = {
   maxZoomLevel: atom(8),
   tileSize: atom(4096),
   keepFinal: atom(true),
+  removeSmall: atom(true),
 };
 
 export const statsStore = {

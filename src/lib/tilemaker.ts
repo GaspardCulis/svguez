@@ -11,7 +11,9 @@ export function createTile(
   const base_tile_size = settingsStore.tileSize.get();
   let tile_size = base_tile_size / Math.pow(2, z);
 
-  const checkSize = !(z === max_zoom && settingsStore.keepFinal.get());
+  const checkSize =
+    settingsStore.removeSmall.get() &&
+    !(z === max_zoom && settingsStore.keepFinal.get());
   const min_size = tile_size / 256;
 
   const bbox = new DOMRect(x * tile_size, y * tile_size, tile_size, tile_size);

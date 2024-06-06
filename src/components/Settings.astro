@@ -45,6 +45,16 @@
         checked
       />
     </label>
+  </div><div class="form-control">
+    <label class="label cursor-pointer">
+      <span class="label-text">Remove small elements</span>
+      <input
+        id="remove-small-input"
+        type="checkbox"
+        class="toggle toggle-success"
+        checked
+      />
+    </label>
   </div>
 </div>
 <script>
@@ -86,8 +96,18 @@
     settingsStore.keepFinal.set(keepFinalInput.checked);
   });
 
+  const removeSmallInput = document.getElementById(
+    "remove-small-input"
+  ) as HTMLInputElement;
+  removeSmallInput.checked = settingsStore.removeSmall.get();
+  removeSmallInput.addEventListener("toggle", (_e) => {
+    settingsStore.removeSmall.set(removeSmallInput.checked);
+  });
+
   processing.subscribe((isProcessing) => {
     maxZoomInput.disabled = isProcessing;
     tileSizeSelect.disabled = isProcessing;
+    keepFinalInput.disabled = isProcessing;
+    removeSmallInput.disabled = isProcessing;
   });
 </script>
