@@ -64,7 +64,7 @@
   const maxZoomInput = document.getElementById(
     "max-zoom-input",
   ) as HTMLInputElement;
-  maxZoomInput.value = `${10 * (settingsStore.maxZoomLevel.get() - 1)}`;
+  maxZoomInput.value = `${10 * (settingsStore.maxZoomLevel.get())}`;
   maxZoomInput.addEventListener("change", (_e) => {
     let maxZoom = parseInt(maxZoomInput.value) / 10;
     settingsStore.maxZoomLevel.set(maxZoom);
