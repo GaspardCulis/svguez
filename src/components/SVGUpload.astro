@@ -12,7 +12,6 @@
 
   const optimizeWorker = new Worker("../lib/svgo.ts", { type: "module" });
   optimizeWorker.onmessage = (e) => {
-    console.log("SVG optimized!");
     const optimizedSvgContent = e.data
     const parser = new DOMParser();
     const svg = parser.parseFromString(
