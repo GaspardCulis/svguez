@@ -37,6 +37,11 @@
     for (const [key, tile] of tiles) {
       zip.file(key, tile.outerHTML);
     }
+    // Add metadata
+    zip.file("meta.json", JSON.stringify({
+      maxZoomLevel: settingsStore.maxZoomLevel,
+      tileSize: settingsStore.tileSize,
+    }));
     console.log("Saved to zip");
 
     const blob = await zip.generateAsync({ type: "blob" });
