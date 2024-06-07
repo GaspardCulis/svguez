@@ -10,7 +10,7 @@
 
   const status_text = document.getElementById("status-text") as HTMLParagraphElement;
 
-  const optimizeWorker = new Worker("../lib/svgo.ts", { type: "module" });
+  const optimizeWorker = new Worker(new URL("../lib/svgo.ts", import.meta.url), { type: "module" });
   optimizeWorker.onmessage = (e) => {
     const optimizedSvgContent = e.data
     const parser = new DOMParser();
