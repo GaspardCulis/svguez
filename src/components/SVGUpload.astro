@@ -6,7 +6,8 @@
 />
 <p id="status-text" class="m-2 text-xs"></p>
 <script>
-  import { inputSVG, processing } from "../lib/store";
+  import { onSVGUpload } from "../lib/lynx";
+import { inputSVG, processing } from "../lib/store";
 
   const status_text = document.getElementById("status-text") as HTMLParagraphElement;
 
@@ -35,6 +36,7 @@
 
     reader.onload = function (e) {
       const content = e.target?.result as string;
+      onSVGUpload(content);
       status_text.innerText = "Optimizing SVG with SVGO...";
       optimizeWorker.postMessage(content);
     };
