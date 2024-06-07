@@ -1,22 +1,13 @@
 diff --git a/node_modules/svgo/plugins/_collections.js b/node_modules/svgo/plugins/_collections.js
-index 6f11b13..2d0ea8a 100644
+index 6f11b13..2e4cb19 100644
 --- a/node_modules/svgo/plugins/_collections.js
 +++ b/node_modules/svgo/plugins/_collections.js
-@@ -13,7 +13,7 @@ exports.elemsGroups = {
-     'animateTransform',
-     'set',
-   ]),
--  descriptive: new Set(['desc', 'metadata', 'title']),
-+  descriptive: new Set(['listNodes', 'desc', 'metadata', 'title']),
-   shape: new Set([
-     'circle',
-     'ellipse',
 @@ -148,7 +148,7 @@ exports.attrsGroups = {
      'requiredFeatures',
      'systemLanguage',
    ]),
 -  core: new Set(['id', 'tabindex', 'xml:base', 'xml:lang', 'xml:space']),
-+  core: new Set(['rrn', 'id', 'tabindex', 'xml:base', 'xml:lang', 'xml:space']),
++  core: new Set(['id', 'rrn', 'tabindex', 'xml:base', 'xml:lang', 'xml:space']),
    graphicalEvent: new Set([
      'onactivate',
      'onclick',
