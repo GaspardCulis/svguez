@@ -64,7 +64,9 @@
   const maxZoomInput = document.getElementById(
     "max-zoom-input",
   ) as HTMLInputElement;
-  maxZoomInput.value = `${10 * (settingsStore.maxZoomLevel.get())}`;
+  settingsStore.maxZoomLevel.subscribe((maxZoomLevel) => {
+    maxZoomInput.value = `${10 * maxZoomLevel}`;
+  })
   maxZoomInput.addEventListener("change", (_e) => {
     let maxZoom = parseInt(maxZoomInput.value) / 10;
     settingsStore.maxZoomLevel.set(maxZoom);
@@ -73,15 +75,16 @@
   const tileSizeSelect = document.getElementById(
     "tile-size-select",
   ) as HTMLSelectElement;
-  let index = 0;
-  for (const option of tileSizeSelect.options) {
-    if (parseInt(option.value) == settingsStore.tileSize.get()) {
-      tileSizeSelect.options.selectedIndex = index;
-      break;
+  settingsStore.tileSize.subscribe((tileSize) => {
+    let index = 0;
+    for (const option of tileSizeSelect.options) {
+      if (parseInt(option.value) == tileSize) {
+        tileSizeSelect.options.selectedIndex = index;
+        break;
+      }
+      index++;
     }
-
-    index++;
-  }
+  });
   tileSizeSelect.addEventListener("change", (_e) => {
     const tileSize = tileSizeSelect.options.item(
       tileSizeSelect.selectedIndex,
@@ -92,7 +95,9 @@
   const keepFinalInput = document.getElementById(
     "keep-final-input",
   ) as HTMLInputElement;
-  keepFinalInput.checked = settingsStore.keepFinal.get();
+  settingsStore.keepFinal.subscribe((keepFinal) => {
+    keepFinalInput.checked = keepFinal;
+  });
   keepFinalInput.addEventListener("change", (_e) => {
     settingsStore.keepFinal.set(keepFinalInput.checked);
   });
@@ -100,7 +105,9 @@
   const removeSmallInput = document.getElementById(
     "remove-small-input"
   ) as HTMLInputElement;
-  removeSmallInput.checked = settingsStore.removeSmall.get();
+  settingsStore.removeSmall.subscribe((removeSmall) => {
+    removeSmallInput.checked = removeSmall;
+  });
   removeSmallInput.addEventListener("change", (_e) => {
     settingsStore.removeSmall.set(removeSmallInput.checked);
   });
