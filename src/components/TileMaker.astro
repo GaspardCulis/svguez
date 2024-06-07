@@ -39,9 +39,9 @@
     }
     // Add metadata
     zip.file("meta.json", JSON.stringify({
-      maxZoomLevel: settingsStore.maxZoomLevel,
-      tileSize: settingsStore.tileSize,
-    }));
+      maxZoomLevel: settingsStore.maxZoomLevel.get(),
+      tileSize: settingsStore.tileSize.get(),
+    }, undefined, 2 ));
     console.log("Saved to zip");
 
     const blob = await zip.generateAsync({ type: "blob" });
