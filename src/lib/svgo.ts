@@ -8,6 +8,8 @@ const config: Config ={
                 overrides: {
                     removeViewBox: false,
                     cleanupIds: false,
+                    removeEmptyAttrs: false,
+                    removeUnusedNS: false,
                 },
             },
         },
