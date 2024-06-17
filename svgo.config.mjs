@@ -8,6 +8,7 @@ export default {
                     cleanupIds: false,
                     removeEmptyAttrs: false,
                     removeUnusedNS: false,
+                    moveGroupAttrsToElems: false,
                 },
             },
         },
