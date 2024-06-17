@@ -10,6 +10,7 @@ const config: Config ={
                     cleanupIds: false,
                     removeEmptyAttrs: false,
                     removeUnusedNS: false,
+                    moveGroupAttrsToElems: false,
                 },
             },
         },
