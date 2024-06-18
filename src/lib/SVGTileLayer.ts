@@ -40,6 +40,8 @@ export default class SVGTileLayer extends L.GridLayer {
     return new SVGTileLayer({
       minNativeZoom: 0,
       maxNativeZoom: meta.maxZoomLevel,
+      maxZoom: 16,
+      minZoom: -16,
       tileSize: meta.tileSize,
     });
   }
