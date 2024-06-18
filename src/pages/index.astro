@@ -15,8 +15,16 @@ import "leaflet/dist/leaflet.css";
       wheelPxPerZoomLevel: 600,
     });
 
+    const response = await fetch("http://localhost:8080/meta.json");
+    const meta = JSON.parse(await response.text()) as {
+      maxZoomLevel: number;
+      tileSize: number;
+    };
+
     L.tileLayer("http://localhost:8080/{z}/{x}/{y}.svg", {
-      tileSize: 1024,
+      minNativeZoom: 0,
+      maxNativeZoom: meta.maxZoomLevel,
+      tileSize: meta.tileSize,
     }).addTo(map);
   </script>
 </Layout>
