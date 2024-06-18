@@ -13,9 +13,11 @@ import "leaflet/dist/leaflet.css";
       crs: L.CRS.Simple,
       center: [0, 0],
       zoom: 0.1,
+      wheelPxPerZoomLevel: 600,
     });
 
-    new SVGTileLayer().addTo(map);
+    let layer = await SVGTileLayer.new();
+    layer.addTo(map);
   </script>
 </Layout>
 <style>
