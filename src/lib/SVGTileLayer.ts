@@ -7,7 +7,7 @@ class SVGTile {
     this.svg
       .querySelectorAll("path")
       .forEach((e) =>
-        this.paths.set(e, parseInt(e.getAttribute("stroke-width") || "1"))
+        this.paths.set(e, parseInt(e.getAttribute("stroke-width") || "1")),
       );
   }
 
@@ -15,7 +15,7 @@ class SVGTile {
     this.paths.forEach((initialStrokeWidth, path) => {
       path.setAttribute(
         "stroke-width",
-        `${initialStrokeWidth / Math.pow(2, zoom)}` // Formule à revoir
+        `${initialStrokeWidth / Math.pow(2, zoom)}`, // Formule à revoir
       );
     });
   }
@@ -25,11 +25,23 @@ export default class SVGTileLayer extends L.GridLayer {
   private tiles = new Map<string, SVGTile>();
   private current_zoom: number = 0;
 
-  constructor() {
-    super({
-      tileSize: 1024,
-    });
+  private constructor(options?: L.GridLayerOptions) {
+    super(options);
     this.on("tileunload", this._onTileRemove);
+  }
+
+  static async new(): Promise<SVGTileLayer> {
+    const response = await fetch("http://localhost:8080/meta.json");
+    const meta = JSON.parse(await response.text()) as {
+      maxZoomLevel: number;
+      tileSize: number;
+    };
+
+    return new SVGTileLayer({
+      minNativeZoom: 0,
+      maxNativeZoom: meta.maxZoomLevel,
+      tileSize: meta.tileSize,
+    });
   }
 
   protected createTile(coords: L.Coords, done: L.DoneCallback): HTMLElement {
@@ -76,9 +88,7 @@ export default class SVGTileLayer extends L.GridLayer {
 
   private async _loadSVG(coords: L.Coords): Promise<HTMLElement | null> {
     const { x, y, z } = coords;
-    const url = new URL(
-      `${document.location.origin}/svguez/svg/elecgeo/tiles/${z}/${x}/${y}.svg`
-    );
+    const url = new URL(`http://localhost:8080/${z}/${x}/${y}.svg`);
 
     const response = await fetch(url);
     if (response.status === 200) {
