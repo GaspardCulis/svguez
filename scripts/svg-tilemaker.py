@@ -29,8 +29,16 @@ class Logger():
         exit(1)
 
 class SVGuezTilemaker():
-    def __init__(self, backend: str = "chrome") -> None:
-        self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install())) if backend == "chrome" else webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
+    def __init__(self, backend: str = "chrome", headless: bool = False) -> None:
+        assert backend in ["chrome", "firefox"]
+        if backend == "chrome":
+            options = webdriver.ChromeOptions()
+            if headless: options.add_argument('--headless')
+            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+        else:
+            options = webdriver.FirefoxOptions()
+            if headless: options.add_argument('--headless')
+            self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
         self.logger = Logger(self)
 
     def load(self, page_url: str):
@@ -136,6 +144,7 @@ if __name__ == "__main__":
     parser.add_argument("-b", "--backend", help="The web driver backend", choices=["chrome", "firefox"], default="chrome")
     parser.add_argument("--remove-small", help="Remove small enough elements from low-zoom levels", action="store_true")
     parser.add_argument("--keep-on-final", help="Keep all small elements when generating the final zoom level", action="store_true")
+    parser.add_argument("--headless", help="Headless driver mode", action="store_true")
     parser.add_argument("--silent", help="Don't log verbose output", action="store_true")
     args = parser.parse_args()
     
@@ -153,9 +162,10 @@ if __name__ == "__main__":
 
     remove_small: bool = args.remove_small
     keep_on_final: bool = args.keep_on_final
+    headless: bool = args.headless
     silent: bool = args.silent
 
-    tilemaker = SVGuezTilemaker(backend)
+    tilemaker = SVGuezTilemaker(backend, headless)
     tilemaker.logger.silent = silent
     tilemaker.load(page_url) \
         .upload_svg(svg_path) \
