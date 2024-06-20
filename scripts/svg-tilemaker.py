@@ -56,7 +56,7 @@ class SVGuezTilemaker():
         return self
 
     def set_keep_on_final(self, value: bool):
-        self._set_checkbox("remove-small-input", value)
+        self._set_checkbox("keep-final-input", value)
         return self
 
     def _set_checkbox(self, id: str, checked: bool):
