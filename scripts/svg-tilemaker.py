@@ -1,4 +1,5 @@
 import selenium
+import os
 from argparse import ArgumentParser
 
 if __name__ == "__main__":
@@ -10,4 +11,16 @@ if __name__ == "__main__":
     parser.add_argument("--remove-small", help="Remove small enough elements from low-zoom levels", action="store_true")
     parser.add_argument("--keep-on-final", help="Keep all small elements when generating the final zoom level", action="store_true")
     args = parser.parse_args()
-    print(args)
+    
+    svg_path: str = args.svg_path
+    assert os.path.exists(svg_path), "The provided SVG image path could not be resolved, try with an absolute path"
+
+    max_zoom_level: int = args.max_zoom_level
+    tile_size: int = args.tile_size
+
+    page_url: str | None = args.page_url if args.page_url else os.environ.get("SVGUEZ_TILEMAKER_URL")
+    assert page_url, "Please specify the --page-url parameter or define the SVGUEZ_TILEMAKER_URL to the SVGuez tilemaker page URL."
+
+    remove_small: bool = args.remove_small
+    remove_on_final: bool = args.remove_on_final
+    
