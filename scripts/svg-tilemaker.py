@@ -11,6 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
 import os
+import base64
 from time import sleep, monotonic
 from argparse import ArgumentParser
 
@@ -37,7 +38,7 @@ class SVGuezTilemaker():
         self.logger.log(f"Navigated to {page_url}")
         return self
 
-    def generate(self):
+    def generate(self, out_zip_path: str):
         wait = WebDriverWait(self.driver, 60)
         self.logger.log("Waiting for image to be processed by SVGO...")
         start_button = wait.until(EC.element_to_be_clickable((By.ID, "start-button")))
@@ -54,6 +55,30 @@ class SVGuezTilemaker():
                 speed = speed_element.get_attribute("innerText")
                 self.logger.log(f"Generation progress is {progress} running at {speed}")
                 t0 = monotonic()
+        
+        # Download tiles
+        download_link = self.driver.find_element(By.CSS_SELECTOR, "a[download=\"tiles.zip\"]")
+        blob_href = download_link.get_attribute("href")
+        zip_text = self.driver.execute_async_script(f"""
+            var done = arguments[0];
+            fetch('{blob_href}').then((response) => {{
+                response.blob().then((blob) => {{
+                    const reader = new FileReader();
+                    reader.onloadend = () => {{
+                        const base64url = reader.result;
+                        const base64String = base64url.slice(base64url.indexOf(',') + 1);
+                        done(base64String);
+                    }};
+                    reader.readAsDataURL(blob);
+                }});
+            }});
+        """)
+        
+        zip_data = base64.b64decode(zip_text)
+
+        # Write the decoded data to a file in binary mode
+        with open(out_zip_path, "wb") as zip_file:
+            zip_file.write(zip_data)
 
         return self
 
@@ -104,6 +129,7 @@ class SVGuezTilemaker():
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("svg_path", help="The path of the SVG image", type=str)
+    parser.add_argument("out_zip_path", help="The path of the output zipped tilemap", type=str)
     parser.add_argument("-z", "--max-zoom-level", help="The max zoom level to generate", type=int, default=5)
     parser.add_argument("-s", "--tile-size", help="The desired tile size", type=int, default=1024)
     parser.add_argument("-u", "--page-url", help="The SVGuez tilemaker page URL, defaults to the SVGUEZ_TILEMAKER_URL env variable value", type=str)
@@ -115,6 +141,7 @@ if __name__ == "__main__":
     
     svg_path: str = args.svg_path
     assert os.path.exists(svg_path), "The provided SVG image path could not be resolved, try with an absolute path"
+    out_zip_path: str = args.out_zip_path
 
     max_zoom_level: int = args.max_zoom_level
     tile_size: int = args.tile_size
@@ -136,4 +163,4 @@ if __name__ == "__main__":
         .set_tile_size(tile_size) \
         .set_remove_small(remove_small) \
         .set_keep_on_final(keep_on_final) \
-        .generate()
+        .generate(out_zip_path)
