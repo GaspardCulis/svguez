@@ -1,6 +1,16 @@
-import selenium
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+
 import os
 from argparse import ArgumentParser
+
+class SVGuezTilemaker():
+    def __init__(self, page_url: str) -> None:
+        self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+        self.driver.get(page_url)
+        
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -22,5 +32,7 @@ if __name__ == "__main__":
     assert page_url, "Please specify the --page-url parameter or define the SVGUEZ_TILEMAKER_URL to the SVGuez tilemaker page URL."
 
     remove_small: bool = args.remove_small
-    remove_on_final: bool = args.remove_on_final
+    keep_on_final: bool = args.keep_on_final
+
+    tilemaker = SVGuezTilemaker(page_url)
     
