@@ -11,7 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
 import os
-from time import sleep
+from time import sleep, monotonic
 from argparse import ArgumentParser
 
 class Logger():
@@ -39,10 +39,22 @@ class SVGuezTilemaker():
 
     def generate(self):
         wait = WebDriverWait(self.driver, 60)
-        self.logger.log("Waiting for SVG to be optimized...")
+        self.logger.log("Waiting for image to be processed by SVGO...")
         start_button = wait.until(EC.element_to_be_clickable((By.ID, "start-button")))
         start_button.click()
         self.logger.log("Started generation")
+        # Wait for generation to complete
+        t0 = monotonic()
+        progress_element = self.driver.find_element(By.ID, "stats-progress-text")
+        speed_element = self.driver.find_element(By.ID, "stats-processing-speed")
+        while start_button.get_attribute("class").split().count("btn-success") == 0: # type: ignore
+            sleep(0.4)
+            if monotonic() - t0 > 10:
+                progress = progress_element.get_attribute("innerText")
+                speed = speed_element.get_attribute("innerText")
+                self.logger.log(f"Generation progress is {progress} running at {speed}")
+                t0 = monotonic()
+
         return self
 
     def upload_svg(self, path: str):
@@ -125,5 +137,3 @@ if __name__ == "__main__":
         .set_remove_small(remove_small) \
         .set_keep_on_final(keep_on_final) \
         .generate()
-    
-    sleep(3600)
