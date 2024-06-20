@@ -14,23 +14,41 @@ import os
 from time import sleep
 from argparse import ArgumentParser
 
+class Logger():
+    def __init__(self, target: object) -> None:
+        self.target_name = target.__class__.__name__
+        self.silent = False
+
+    def log(self, message: str):
+        if self.silent: return
+        print(f"[{self.target_name}]: {message}")
+
+    def panic(self, message: str):
+        print(f"[PANIC: {self.target_name}] {message}")
+        exit(1)
+
 class SVGuezTilemaker():
     def __init__(self, backend: str = "chrome") -> None:
         self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install())) if backend == "chrome" else webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
+        self.logger = Logger(self)
 
     def load(self, page_url: str):
         self.driver.get(page_url)
+        self.logger.log(f"Navigated to {page_url}")
         return self
 
     def generate(self):
         wait = WebDriverWait(self.driver, 60)
+        self.logger.log("Waiting for SVG to be optimized...")
         start_button = wait.until(EC.element_to_be_clickable((By.ID, "start-button")))
         start_button.click()
+        self.logger.log("Started generation")
         return self
 
     def upload_svg(self, path: str):
         file_upload = self.driver.find_element(By.ID, "file-upload")
         file_upload.send_keys(path)
+        self.logger.log(f"Uploaded {path}")
         return self
 
     def set_max_zoom(self, value: int):
@@ -40,6 +58,7 @@ class SVGuezTilemaker():
         for _ in range(value):
             zoom_level_input.send_keys(Keys.RIGHT)
 
+        self.logger.log(f"Set max zoom level to {value}")
         return self
     
     def set_tile_size(self, value: int):
@@ -47,16 +66,19 @@ class SVGuezTilemaker():
         try:
             tile_size_select.select_by_value(str(value))
         except NoSuchElementException:
-            raise IndexError("The specified tile-size argument isn't available, try exponents of two (256, 512, 1024, 2048...)")
+            self.logger.panic("The specified tile-size argument isn't available, try exponents of two (256, 512, 1024, 2048...)")
 
+        self.logger.log(f"Set tile size to {value}x{value} px")
         return self
         
     def set_remove_small(self, value: bool):
         self._set_checkbox("remove-small-input", value)
+        self.logger.log(f"Set remove small elements to {value}")
         return self
 
     def set_keep_on_final(self, value: bool):
         self._set_checkbox("keep-final-input", value)
+        self.logger.log(f"Set keep small on final zoom level to {value}")
         return self
 
     def _set_checkbox(self, id: str, checked: bool):
@@ -76,6 +98,7 @@ if __name__ == "__main__":
     parser.add_argument("-b", "--backend", help="The web driver backend", choices=["chrome", "firefox"], default="chrome")
     parser.add_argument("--remove-small", help="Remove small enough elements from low-zoom levels", action="store_true")
     parser.add_argument("--keep-on-final", help="Keep all small elements when generating the final zoom level", action="store_true")
+    parser.add_argument("--silent", help="Don't log verbose output", action="store_true")
     args = parser.parse_args()
     
     svg_path: str = args.svg_path
@@ -91,9 +114,11 @@ if __name__ == "__main__":
 
     remove_small: bool = args.remove_small
     keep_on_final: bool = args.keep_on_final
+    silent: bool = args.silent
 
-    tilemaker = SVGuezTilemaker(backend) \
-        .load(page_url) \
+    tilemaker = SVGuezTilemaker(backend)
+    tilemaker.logger.silent = silent
+    tilemaker.load(page_url) \
         .upload_svg(svg_path) \
         .set_max_zoom(max_zoom_level) \
         .set_tile_size(tile_size) \
