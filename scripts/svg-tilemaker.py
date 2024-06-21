@@ -12,6 +12,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 
 import os
 import base64
+from typing import Optional
 from time import sleep, monotonic
 from argparse import ArgumentParser
 
@@ -155,7 +156,7 @@ if __name__ == "__main__":
     max_zoom_level: int = args.max_zoom_level
     tile_size: int = args.tile_size
 
-    page_url: str | None = args.page_url if args.page_url else os.environ.get("SVGUEZ_TILEMAKER_URL")
+    page_url: Optional[str] = args.page_url if args.page_url else os.environ.get("SVGUEZ_TILEMAKER_URL")
     assert page_url, "Please specify the --page-url parameter or define the SVGUEZ_TILEMAKER_URL to the SVGuez tilemaker page URL."
 
     backend: str = args.backend
