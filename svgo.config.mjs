@@ -9,6 +9,7 @@ export default {
                     removeEmptyAttrs: false,
                     removeUnusedNS: false,
                     moveGroupAttrsToElems: false,
+                    removeHiddenElems: false,
                 },
             },
         },

@@ -11,6 +11,7 @@ const config: Config ={
                     removeEmptyAttrs: false,
                     removeUnusedNS: false,
                     moveGroupAttrsToElems: false,
+                    removeHiddenElems: false,
                 },
             },
         },
