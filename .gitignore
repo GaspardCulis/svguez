@@ -22,3 +22,5 @@ pnpm-debug.log*
 
 # Big ass SVG
 public/svg
+# Big ass GeoJSON
+public/geojson
