@@ -4,23 +4,16 @@ import "leaflet/dist/leaflet.css";
 ---
 
 <Layout title="Welcome to Astro.">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" />
   <div id="map"></div>
   <script>
     import maplibregl from "maplibre-gl";
     import { loadGeoJSON } from "../lib/utils";
 
-    const elecgeo = await loadGeoJSON("elecgeo.json");
+    const features = await loadGeoJSON(`${new URLSearchParams(window.location.search).get("image") || "elecgeo"}.json`);
     const geojson = {
       type: "FeatureCollection",
-      features: elecgeo.map((geometry) => {
-        return {
-          type: "Feature",
-          properties: {
-            color: "#F7455D", // red
-          },
-          geometry,
-        };
-      }),
+      features,
     };
 
     const map = new maplibregl.Map({
@@ -36,6 +29,7 @@ import "leaflet/dist/leaflet.css";
         type: "geojson",
         // @ts-ignore
         data: geojson,
+        generateId: true
       });
       map.addLayer({
         id: "lines",
@@ -45,23 +39,42 @@ import "leaflet/dist/leaflet.css";
           "line-width": 3,
           // Use a get expression (https://maplibre.org/maplibre-style-spec/expressions/#get)
           // to set the line-color to a feature property value.
-          "line-color": ["get", "color"],
+          "line-color": ["feature-state", "color"],
         },
       });
-    });
 
-    setInterval(() => {
-      const t0 = performance.now();
-      for (let feature of geojson.features) {
-        if (Math.random() < 0.999) continue;
-        feature.properties.color = "#" + Math.floor(Math.random()*16777215).toString(16);
-      }
-      console.log(`Iterating through ${geojson.features.length} features took ${performance.now() - t0}ms`)
-      map.getSource('lines')?.setData(geojson);
-    }, 3000);
+      map.on("click", "lines", (e) => {
+        const feature = e.features![0];
+        new maplibregl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(`
+<div>
+  <h3>${feature.properties.rrn}</h3>
+  <select id="color-select">
+    <option value="">--Select color--</option>
+    <option value="#ff0000">Red</option>
+    <option value="blue">Blue</option>
+    <option value="green">Green</option>
+    <option value="yellow">Yellow</option>
+    <option value="aqua">Aqua</option>
+    <option value="pink">Pink</option>
+  </select>
+</div>
+          `)
+          .addTo(map);
+          const colorSelect = document.getElementById("color-select") as HTMLSelectElement;
+          colorSelect.addEventListener("change", (_) => {
+            map.setFeatureState({
+              source: "lines",
+              id: feature.id
+            }, { color: colorSelect.value })
+          });
+      })
+    });
   </script>
 </Layout>
 <style>
+  @import "maplibre-gl";
   #map {
     width: 100%;
     height: 100vh;
