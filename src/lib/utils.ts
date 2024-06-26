@@ -10,7 +10,7 @@ export async function loadSVG(name: string): Promise<SVGSVGElement> {
 
 export async function loadGeoJSON(
   name: string
-): Promise<{type: "LineString", coordinates: [number, number]}[]> {
+): Promise<GeoJSON.GeoJsonObject[]> {
   const response = await fetch(`/geojson/${name}`);
   const geojson = await response.json();
 
