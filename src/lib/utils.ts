@@ -8,6 +8,15 @@ export async function loadSVG(name: string): Promise<SVGSVGElement> {
     .documentElement as unknown as SVGSVGElement;
 }
 
+export async function loadGeoJSON(
+  name: string
+): Promise<GeoJSON.GeoJsonObject[]> {
+  const response = await fetch(`/geojson/${name}`);
+  const geojson = await response.json();
+
+  return geojson;
+}
+
 export function intersects(rect_a: DOMRect, rect_b: DOMRect): boolean {
   return !(
     rect_a.x + rect_a.width < rect_b.x ||
@@ -20,7 +29,7 @@ export function intersects(rect_a: DOMRect, rect_b: DOMRect): boolean {
 export function computeFinalTileCount(
   tile_size: number,
   max_zoom: number,
-  svg_size: { width: number; height: number },
+  svg_size: { width: number; height: number }
 ): number {
   const initial_width = Math.ceil(svg_size.width / tile_size);
   const initial_height = Math.ceil(svg_size.height / tile_size);
@@ -35,7 +44,7 @@ export function computeFinalTileCount(
 function filterSVGworker(
   elements: NodeListOf<ChildNode>,
   new_element: SVGElement,
-  predicate: (element: ChildNode) => boolean,
+  predicate: (element: ChildNode) => boolean
 ) {
   for (let element of elements) {
     if (predicate(element)) {
@@ -46,7 +55,7 @@ function filterSVGworker(
         filterSVGworker(
           element.childNodes as NodeListOf<SVGGraphicsElement>,
           new_node as SVGElement,
-          predicate,
+          predicate
         );
       }
 
@@ -59,7 +68,7 @@ function filterSVGworker(
 
 export function filterSVG(
   element: SVGSVGElement & SVGGraphicsElement,
-  predicate: (element: ChildNode) => boolean,
+  predicate: (element: ChildNode) => boolean
 ): SVGSVGElement {
   let out = element.cloneNode(false) as SVGSVGElement;
 
