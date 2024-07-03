@@ -13,6 +13,7 @@
     settingsStore,
     statsStore,
   } from "../lib/store";
+  import { CompressedTileStorage } from "../lib/storage/GZippedTileStorage";
 
   const svg_container = document.getElementById(
     "svg-container",
@@ -30,7 +31,7 @@
 
     console.log("Creating tiles...");
 
-    const tile_storage = new Map<string, SVGSVGElement>();
+    const tile_storage = new CompressedTileStorage();
     const tilemaker = new TileMaker(svg, tile_storage, {
       tileSize: settingsStore.tileSize.get(),
       maxZoomLevel: settingsStore.maxZoomLevel.get(),
