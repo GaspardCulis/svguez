@@ -46,7 +46,9 @@
     console.log("Saving to zip...");
     const zip = new JSZip();
     for (const [key, tile] of tiles) {
-      zip.file(key, tile.outerHTML);
+      tile instanceof SVGSVGElement
+        ? zip.file(key, tile.outerHTML)
+        : zip.file(key, tile);
     }
     // Add metadata
     zip.file(

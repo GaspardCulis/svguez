@@ -4,7 +4,7 @@ import { filterSVG, intersects } from "./utils";
 export interface TileStorage {
   size: number;
   set(coords: string, tile: SVGSVGElement): void;
-  [Symbol.iterator](): Iterator<[string, SVGSVGElement]>;
+  [Symbol.iterator](): Iterator<[string, SVGSVGElement | string]>;
 }
 
 type TilemakerParams = {
