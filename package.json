@@ -19,6 +19,7 @@
     "leaflet": "^1.9.4",
     "maplibre-gl": "^4.1.1",
     "nanostores": "^0.10.3",
+    "pako": "^2.1.0",
     "patch-package": "^8.0.0",
     "svgo": "^3.3.2",
     "tailwindcss": "^3.4.3",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@types/leaflet": "^1.9.8",
     "@types/maplibre-gl": "^1.14.0",
+    "@types/pako": "^2.0.3",
     "daisyui": "^4.10.2"
   }
 }
