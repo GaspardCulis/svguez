@@ -5,7 +5,7 @@
 </div>
 <script>
   import JSZip from "jszip";
-  import { createTiles } from "../lib/tilemaker";
+  import TileMaker from "../lib/tilemaker";
   import { saveBlob } from "../lib/utils";
   import {
     inputSVG,
@@ -15,7 +15,7 @@
   } from "../lib/store";
 
   const svg_container = document.getElementById(
-    "svg-container"
+    "svg-container",
   ) as HTMLDivElement;
 
   processing.subscribe(async (started) => {
@@ -25,11 +25,22 @@
       console.error("Started processing without valid SVG");
       return;
     }
+
     svg_container.appendChild(inputSVG.get()!);
 
     console.log("Creating tiles...");
 
-    const tiles = await createTiles(svg, settingsStore.maxZoomLevel.get());
+    const tile_storage = new Map<string, SVGSVGElement>();
+    const tilemaker = new TileMaker(svg, tile_storage, {
+      tileSize: settingsStore.tileSize.get(),
+      maxZoomLevel: settingsStore.maxZoomLevel.get(),
+      removeSmall: settingsStore.removeSmall.get(),
+      keepFinal: settingsStore.keepFinal.get(),
+    });
+    const tiles = await tilemaker.createTiles(
+      svg,
+      settingsStore.maxZoomLevel.get(),
+    );
 
     // Save to zip
     console.log("Saving to zip...");
@@ -38,10 +49,17 @@
       zip.file(key, tile.outerHTML);
     }
     // Add metadata
-    zip.file("meta.json", JSON.stringify({
-      maxZoomLevel: settingsStore.maxZoomLevel.get(),
-      tileSize: settingsStore.tileSize.get(),
-    }, undefined, 2 ));
+    zip.file(
+      "meta.json",
+      JSON.stringify(
+        {
+          maxZoomLevel: settingsStore.maxZoomLevel.get(),
+          tileSize: settingsStore.tileSize.get(),
+        },
+        undefined,
+        2,
+      ),
+    );
     console.log("Saved to zip");
 
     const blob = await zip.generateAsync({ type: "blob" });
