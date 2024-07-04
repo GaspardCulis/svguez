@@ -10,7 +10,7 @@ import "leaflet/dist/leaflet.css";
     import maplibregl from "maplibre-gl";
     import GeoJSONLayer from "../lib/GeoJSONLayer";
 
-    let layer = await GeoJSONLayer.fromImage(`${new URLSearchParams(window.location.search).get("image") || "elecgeo"}.json`);
+    let layer = await GeoJSONLayer.fromImage(`${new URLSearchParams(window.location.search).get("image") || "bt"}.json`);
 
     const map = new maplibregl.Map({
       container: "map",
