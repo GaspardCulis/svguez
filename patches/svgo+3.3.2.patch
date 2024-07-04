@@ -7,7 +7,7 @@ index 6f11b13..2e4cb19 100644
      'systemLanguage',
    ]),
 -  core: new Set(['id', 'tabindex', 'xml:base', 'xml:lang', 'xml:space']),
-+  core: new Set(['id', 'rrn', 'tabindex', 'xml:base', 'xml:lang', 'xml:space']),
++  core: new Set(['id', 'rrn', 't', 'tabindex', 'xml:base', 'xml:lang', 'xml:space']),
    graphicalEvent: new Set([
      'onactivate',
      'onclick',
