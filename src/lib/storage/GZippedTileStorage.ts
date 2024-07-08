@@ -1,4 +1,4 @@
-import type { TileStorage } from "./tilemaker";
+import type { TileStorage } from "../tilemaker";
 import pako from "pako"; // A library for gzip compression and decompression
 
 export class CompressedTileStorage implements TileStorage {
