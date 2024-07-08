@@ -89,6 +89,8 @@ export default class Tilemaker {
       let svg_tile = this.createTile(svg, z, x, y, max_zoom);
       let key = `${z}/${x}/${y}.svg`;
       this.storage.set(key, svg_tile);
+      // @ts-ignore
+      svg_tile = null;
 
       x++;
       if (x >= initial_width * Math.pow(2, z)) {

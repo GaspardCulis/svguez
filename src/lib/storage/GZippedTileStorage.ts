@@ -8,6 +8,8 @@ export class CompressedTileStorage implements TileStorage {
 
   set(coords: string, tile: SVGSVGElement): void {
     const xml = new XMLSerializer().serializeToString(tile);
+    // @ts-ignore
+    tile = null;
     const compressed = pako.gzip(xml);
     this.storage.set(coords, compressed);
   }
