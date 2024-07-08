@@ -13,7 +13,6 @@
     settingsStore,
     statsStore,
   } from "../lib/store";
-  import { CompressedTileStorage } from "../lib/storage/GZippedTileStorage";
 
   const svg_container = document.getElementById(
     "svg-container",
@@ -31,26 +30,17 @@
 
     console.log("Creating tiles...");
 
-    const tile_storage = new CompressedTileStorage();
-    const tilemaker = new TileMaker(svg, tile_storage, {
+    const tilemaker = new TileMaker(svg, {
       tileSize: settingsStore.tileSize.get(),
       maxZoomLevel: settingsStore.maxZoomLevel.get(),
       removeSmall: settingsStore.removeSmall.get(),
       keepFinal: settingsStore.keepFinal.get(),
     });
-    const tiles = await tilemaker.createTiles(
+    const zip = await tilemaker.createTiles(
       svg,
       settingsStore.maxZoomLevel.get(),
     );
 
-    // Save to zip
-    console.log("Saving to zip...");
-    const zip = new JSZip();
-    for (const [key, tile] of tiles) {
-      tile instanceof SVGSVGElement
-        ? zip.file(key, tile.outerHTML)
-        : zip.file(key, tile);
-    }
     // Add metadata
     zip.file(
       "meta.json",

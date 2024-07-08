@@ -1,11 +1,6 @@
+import JSZip from "jszip";
 import { statsStore } from "./store";
 import { filterSVG, intersects } from "./utils";
-
-export interface TileStorage {
-  size: number;
-  set(coords: string, tile: SVGSVGElement): void;
-  [Symbol.iterator](): Iterator<[string, SVGSVGElement | string]>;
-}
 
 type TilemakerParams = {
   tileSize: number;
@@ -14,10 +9,14 @@ type TilemakerParams = {
   keepFinal: boolean;
 };
 
+type TilemakerOutput = JSZip;
+
 export default class Tilemaker {
+  readonly output: TilemakerOutput = new JSZip();
+  private tile_count = 0;
+
   constructor(
     readonly svg: SVGSVGElement,
-    readonly storage: TileStorage,
     readonly params: TilemakerParams,
   ) {}
 
@@ -72,7 +71,7 @@ export default class Tilemaker {
   private createTilesChunked(
     svg: SVGSVGElement,
     max_zoom: number,
-    resolve: (value: TileStorage) => void,
+    resolve: (value: TilemakerOutput) => void,
     x: number,
     y: number,
     z: number,
@@ -88,7 +87,8 @@ export default class Tilemaker {
       // Process 20 tiles at a time
       let svg_tile = this.createTile(svg, z, x, y, max_zoom);
       let key = `${z}/${x}/${y}.svg`;
-      this.storage.set(key, svg_tile);
+      this.output.file(key, svg_tile.outerHTML);
+      this.tile_count++;
       // @ts-ignore
       svg_tile = null;
 
@@ -99,7 +99,7 @@ export default class Tilemaker {
         if (y >= initial_height * Math.pow(2, z)) {
           z++;
           if (z > max_zoom) {
-            resolve(this.storage);
+            resolve(this.output);
             return;
           }
           y = 0;
@@ -109,9 +109,9 @@ export default class Tilemaker {
 
     // Stats
     statsStore.currentZoom.set(z);
-    statsStore.tileCount.set(this.storage.size);
+    statsStore.tileCount.set(this.tile_count);
     statsStore.progress.set(
-      (100 * this.storage.size) / statsStore.finalTilesCount.get(),
+      (100 * this.tile_count) / statsStore.finalTilesCount.get(),
     );
 
     requestAnimationFrame(() =>
@@ -119,8 +119,9 @@ export default class Tilemaker {
     );
   }
 
-  createTiles(svg: SVGSVGElement, max_zoom: number): Promise<TileStorage> {
-    return new Promise<TileStorage>((resolve) => {
+  createTiles(svg: SVGSVGElement, max_zoom: number): Promise<TilemakerOutput> {
+    this.tile_count = 0;
+    return new Promise<TilemakerOutput>((resolve) => {
       this.createTilesChunked(svg, max_zoom, resolve, 0, 0, 0);
     });
   }
