@@ -42,11 +42,14 @@ export default class Tilemaker {
 
     const svg_tile = filterSVG(svg, (element) => {
       if (element instanceof SVGGraphicsElement) {
-        const element_bbox = element.getBoundingClientRect();
+        // Start with unprecise but fast `getBBox` method
+        let element_bbox = element.getBBox();
 
         if (!intersects(bbox, element_bbox)) {
           return false;
         } else if (checkSize) {
+          // Compute bbox with more precise but expensive `getBoundingClientRect` method for width and height checking
+          element_bbox = element.getBoundingClientRect();
           if (element_bbox.height < min_size && element_bbox.width < min_size) {
             return false;
           }
