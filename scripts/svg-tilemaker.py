@@ -7,6 +7,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
+from webdriver_manager.core.driver_cache import DriverCacheManager
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
@@ -32,14 +33,15 @@ class Logger():
 class SVGuezTilemaker():
     def __init__(self, backend: str = "chrome", headless: bool = False) -> None:
         assert backend in ["chrome", "firefox"]
+        cache_manager = DriverCacheManager()
         if backend == "chrome":
             options = webdriver.ChromeOptions()
             if headless: options.add_argument('--headless')
-            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(cache_manager=cache_manager).install()), options=options)
         else:
             options = webdriver.FirefoxOptions()
             if headless: options.add_argument('--headless')
-            self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+            self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager(cache_manager=cache_manager).install()), options=options)
         self.logger = Logger(self)
 
     def load(self, page_url: str):
