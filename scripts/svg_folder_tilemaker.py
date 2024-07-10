@@ -7,7 +7,7 @@ import socketserver
 from argparse import ArgumentParser
 from typing import Optional
 from svg_tilemaker import SVGuezTilemaker
-from selenium.common.exceptions import TimeoutException, InvalidSessionIdException
+from selenium.common.exceptions import TimeoutException, InvalidSessionIdException, NoSuchWindowException
 
 SVGUEZ_TILEMAKER_ADDRESS = "localhost"
 SVGUEZ_TILEMAKER_PORT = 8080
@@ -64,7 +64,7 @@ if __name__ == "__main__":
             except TimeoutException as e:
                 error = e
                 diagnostic = "likely due to a malformed SVG image"
-            except InvalidSessionIdException as e:
+            except (InvalidSessionIdException, NoSuchWindowException) as e:
                 error = e
                 diagnostic = "likely due to the browser running out of RAM"
                 tilemaker = SVGuezTilemaker("firefox", True)
