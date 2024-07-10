@@ -1,6 +1,7 @@
 import JSZip from "jszip";
 import { statsStore } from "./store";
-import { filterSVG, intersects } from "./utils";
+import { intersects } from "./utils";
+import { filterSVG } from "./filter_svg";
 
 type TilemakerParams = {
   tileSize: number;
