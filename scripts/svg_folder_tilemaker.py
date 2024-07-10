@@ -75,6 +75,8 @@ if __name__ == "__main__":
                     print(error)
                     print(f"{error_name} occured on {file}, {diagnostic}")
                     files_with_error.append((file, error_name))
+                else:
+                    print(f"Successful generation for {file}")
 
 
         httpd.shutdown()
