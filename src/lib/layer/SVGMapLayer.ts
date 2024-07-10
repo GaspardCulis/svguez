@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { loadSVG } from "./utils";
+import { loadSVG } from "../utils";
 
 /** Classe représentant un {@link L.SVGOverlay} auquel est associé un niveau de zoom */
 export default class SVGMapLayer {
@@ -13,7 +13,7 @@ export default class SVGMapLayer {
     /** @readonly Propriété mise à jour en fonction de la présence ou non du {@link L.SVGOverlay} sur la carte */
     public visible: boolean,
     /** Un cache contenant les références aux éléments `<path>` du SVG ainsi que la valeur initiale de leur attribut `stroke_width` */
-    private paths: Map<SVGPathElement, number>
+    private paths: Map<SVGPathElement, number>,
   ) {
     this.log(`Created new SVGMapLayer with ${this.paths.size} cached paths`);
   }
@@ -40,7 +40,7 @@ export default class SVGMapLayer {
     element
       .querySelectorAll("path")
       .forEach((e) =>
-        paths.set(e, parseInt(e.getAttribute("stroke-width") || "1"))
+        paths.set(e, parseInt(e.getAttribute("stroke-width") || "1")),
       );
 
     return new SVGMapLayer(zoom_level, element, overlay, visible, paths);
@@ -64,13 +64,13 @@ export default class SVGMapLayer {
         this.paths.forEach((initialStrokeWidth, path) => {
           path.setAttribute(
             "stroke-width",
-            `${initialStrokeWidth / Math.pow(current_zoom, 2)}` // Formule à revoir
+            `${initialStrokeWidth / Math.pow(current_zoom, 2)}`, // Formule à revoir
           );
         });
         this.log(
           `Updated stroke-width for ${this.paths.size} paths in ${
             performance.now() - t0
-          }ms`
+          }ms`,
         );
       }
     });
