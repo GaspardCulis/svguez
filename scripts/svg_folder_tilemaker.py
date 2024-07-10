@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
         files_with_error: list[tuple[str, str]] = []
         tilemaker = SVGuezTilemaker("firefox", True)
-        for file in filter(lambda f: f.endswith(".svg"), os.listdir(svg_folder)):
+        for file in sorted(filter(lambda f: f.endswith(".svg"), os.listdir(svg_folder))):
             in_file = os.path.join(svg_folder, file)
             out_file = os.path.join(zip_folder, f"{file}.zip")
             if os.path.isfile(out_file) and not force:
