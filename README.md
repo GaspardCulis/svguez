@@ -1,39 +1,53 @@
-# SVGuez
+<p align="center" style="margin-bottom: 0px !important;">
+    <picture>
+        <img width="300" src="public/favicon.svg" alt="SVGuez logo" align="center">
+    </picture>
+</p>
+<h1 align="center" style="margin-top: 0px;">SVGuez</h1>
 
-An attempt at making a fast Lynx
 
-## Structure du projet
+<p align="center">An attempt at making a fast Lynx</p>
 
-- `src/pages/index.astro`: Code de la page du site par défault
-- `src/lib/SVGMapLayer.ts` : Définition de la classe **SVGMapLayer**.
-- `patches/svgo+x.x.x.patch` : Un patch qui sera appliqué à l'installation de **SVGO** qui rajoute les définitions de `listNodes` et `rrn` comme elements et attributs valides.
+# Project structure
 
-## Observations
-
-- Changer (diminuer) les dimensions du viewport d'une image SVG a peu d'impact sur la performance, même si techniquement on rasterize une image plus petite.
-
-## Choses à faire coté Lynx
-
-### Frontend
-
-### Backend
-
-- **pctSvg**: Ne plus utiliser la balise `<style>svg { background-color: #333333; }</style>` mais plutôt l'attribut `style="background-color: #333333"`
-
-## Utiliser SVGO
-
-### Installation
-
-SVGO doit être installé comme dépendance dans le répertoire de ce projet car NPM doit appliquer le patch `patches/svgo+x.x.x.patch`. Installez donc les dépendances du projet avec la commande :
+This project is made using the [AstroJS](https://astro.build) framework, the [TailwindCSS](https://tailwindcss.com/) CSS framework, and the [DaisyUI](https://daisyui.com/) component library.
 
 ```sh
-npm install
+.
+├───patches # Contains npm package patches, notably the SVGO one
+├───public # Astro public directory
+├───scripts # Contains python scripts relative to the project
+└───src # Astro project source code directory
+    ├───components
+    ├───layouts
+    ├───lib
+    │   └───layer # Custom leaflet layers
+    └───pages # Astro pages directory, the site URL structure is the same as the file structure
 ```
 
-### Utilisation
+# Usage
 
-A executer dans le même répertoire que `svgo.config.mjs` pour conserver les ID et RRN
+```sh
+git clone github.gsissc.myatos.net/FR-ECH-WORLDGRID-LYNX/svguez
+cd svguez
+npm i # Installs the dependencies and patch the ones with the patches in the `./patches` directory
+```
+
+## Development 
+
+```sh
+npm run dev
+```
+
+## Build the site
 
 ```
-npx svgo chemin_svg_entree.svg -o chemin_svg_sortie.svg
+npm run build
 ```
+
+The site will be built in `./dist` as static HTML files and bundled CSS and JS.
+
+# Things to know
+
+- The tilemaker page is available at the `/tilemaker` route
+- Changing [`./svgo.config.mjs`](./svgo.config.mjs) won't affect the SVGO config for the SVG image upload pre-processing, which is defined in [`./src/lib/svgo.ts`](./src/lib/svgo.ts#L3). So edit both instead
