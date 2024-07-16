@@ -11,7 +11,7 @@ from selenium.common.exceptions import TimeoutException, InvalidSessionIdExcepti
 
 SVGUEZ_TILEMAKER_ADDRESS = "localhost"
 SVGUEZ_TILEMAKER_PORT = 8080
-SVGUEZ_TILEMAKER_URL=f"http://{SVGUEZ_TILEMAKER_ADDRESS}:{SVGUEZ_TILEMAKER_PORT}/svguez/tilemaker/"
+SVGUEZ_TILEMAKER_URL=f"http://{SVGUEZ_TILEMAKER_ADDRESS}:{SVGUEZ_TILEMAKER_PORT}/tilemaker/"
 
 if __name__ == "__main__":
     parser = ArgumentParser()
