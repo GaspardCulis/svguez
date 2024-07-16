@@ -23,5 +23,6 @@ pnpm-debug.log*
 # Big ass SVG
 public/svg
 
-# Python venv
+# Python specific
 .venv/
+**/__pycache__/
