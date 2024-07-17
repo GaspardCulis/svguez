@@ -13,6 +13,8 @@ SVGUEZ_TILEMAKER_ADDRESS = "localhost"
 SVGUEZ_TILEMAKER_PORT = 8080
 SVGUEZ_TILEMAKER_URL=f"http://{SVGUEZ_TILEMAKER_ADDRESS}:{SVGUEZ_TILEMAKER_PORT}/tilemaker/"
 
+SVG_SIZE_THRESHOLD = 900000
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("svg_folder", help="The path of the folder containing the SVG images", type=str)
@@ -48,7 +50,7 @@ if __name__ == "__main__":
                 print(f"Tileset already generated for {file}, skipping...")
                 continue
             
-            max_zoom_level, tile_size = [0, 4096] if os.stat(in_file).st_size < 8000000 else [5, 1024]
+            max_zoom_level, tile_size = [0, 4096] if os.stat(in_file).st_size < SVG_SIZE_THRESHOLD else [5, 1024]
 
             error: Optional[Exception] = None
             diagnostic: str = ""
