@@ -33,7 +33,7 @@ options:
   -u PAGE_URL, --page-url PAGE_URL
                         The SVGuez tilemaker page URL, defaults to the SVGUEZ_TILEMAKER_URL env variable value
   -b {chrome,firefox}, --backend {chrome,firefox}
-                        The web driver backend (default: chrome)
+                        The web driver backend (default: firefox)
   --remove-small        Remove small enough elements from low-zoom levels (default: False)
   --keep-on-final       Keep all small elements when generating the final zoom level (default: False)
   --headless            Headless driver mode (default: False)
