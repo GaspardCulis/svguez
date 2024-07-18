@@ -27,24 +27,24 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -z MAX_ZOOM_LEVEL, --max-zoom-level MAX_ZOOM_LEVEL
-                        The max zoom level to generate
+                        The max zoom level to generate (default: 5)
   -s TILE_SIZE, --tile-size TILE_SIZE
-                        The desired tile size
+                        The desired tile size (default: 1024)
   -u PAGE_URL, --page-url PAGE_URL
                         The SVGuez tilemaker page URL, defaults to the SVGUEZ_TILEMAKER_URL env variable value
-  -b {chrome,firefox}, --backend {chrome,firefox} # Firefox is more performant
-                        The web driver backend
-  --remove-small        Remove small enough elements from low-zoom levels
-  --keep-on-final       Keep all small elements when generating the final zoom level
-  --headless            Headless driver mode
-  --silent              Don't log verbose output
+  -b {chrome,firefox}, --backend {chrome,firefox}
+                        The web driver backend (default: chrome)
+  --remove-small        Remove small enough elements from low-zoom levels (default: False)
+  --keep-on-final       Keep all small elements when generating the final zoom level (default: False)
+  --headless            Headless driver mode (default: False)
+  --silent              Don't log verbose output (default: False)
 ```
 
 ### svg_folder_tilemaker.py
 
 This script is a wrapper around the `svg_tilemaker.py` code, which iterates the SVG files in an input directory and generates the ZIP tilemaps in an output folder. It self-hosts the SVGuez web-app in a separate thread.
 
-```
+```sh
 usage: svg_folder_tilemaker.py [-h] [-d WWW_DIRECTORY] [-f] svg_folder zip_folder
 
 positional arguments:
@@ -54,6 +54,6 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -d WWW_DIRECTORY, --www-directory WWW_DIRECTORY
-                        The directory containing the SVGuez dist folder
-  -f, --force           Overwrite already generated tilesets
+                        The directory containing the SVGuez dist folder (default: ./dist)  
+  -f, --force           Overwrite already generated tilesets (default: False)
 ```
