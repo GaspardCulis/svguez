@@ -19,7 +19,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("svg_folder", help="The path of the folder containing the SVG images", type=str)
     parser.add_argument("zip_folder", help="The path of the folder where the output tilesets zip will be stored", type=str)
-    parser.add_argument("-d", "--www-directory", help="The directory containing the SVGuez dist folder", type=str, default="./www")
+    parser.add_argument("-d", "--www-directory", help="The directory containing the SVGuez dist folder", type=str, default="./dist")
     parser.add_argument("-f", "--force", help="Overwrite already generated tilesets", action="store_true")
     args = parser.parse_args()
 
