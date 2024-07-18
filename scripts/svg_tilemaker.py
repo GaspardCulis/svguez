@@ -15,7 +15,7 @@ import os
 import base64
 from typing import Optional
 from time import sleep, monotonic
-from argparse import ArgumentParser
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 
 class Logger():
     def __init__(self, target: object) -> None:
@@ -138,7 +138,7 @@ class SVGuezTilemaker():
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
+    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("svg_path", help="The path of the SVG image", type=str)
     parser.add_argument("out_zip_path", help="The path of the output zipped tilemap", type=str)
     parser.add_argument("-z", "--max-zoom-level", help="The max zoom level to generate", type=int, default=5)

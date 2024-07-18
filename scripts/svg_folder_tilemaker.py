@@ -4,7 +4,7 @@ import os
 import threading
 import http.server
 import socketserver
-from argparse import ArgumentParser
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from typing import Optional
 from svg_tilemaker import SVGuezTilemaker
 from selenium.common.exceptions import TimeoutException, InvalidSessionIdException, NoSuchWindowException, NoSuchElementException
@@ -16,7 +16,7 @@ SVGUEZ_TILEMAKER_URL=f"http://{SVGUEZ_TILEMAKER_ADDRESS}:{SVGUEZ_TILEMAKER_PORT}
 SVG_SIZE_THRESHOLD = 900000
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
+    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("svg_folder", help="The path of the folder containing the SVG images", type=str)
     parser.add_argument("zip_folder", help="The path of the folder where the output tilesets zip will be stored", type=str)
     parser.add_argument("-d", "--www-directory", help="The directory containing the SVGuez dist folder", type=str, default="./dist")
