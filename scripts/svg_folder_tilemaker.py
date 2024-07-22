@@ -69,11 +69,12 @@ if __name__ == "__main__":
             except (InvalidSessionIdException, NoSuchWindowException, NoSuchElementException) as e:
                 error = e
                 diagnostic = "likely due to the browser running out of RAM"
-                tilemaker = SVGuezTilemaker("firefox", True)
+                tilemaker = tilemaker.restart()
                 print("Browser has been restarted")
             except Exception as e:
                 error = e
                 diagnostic = "Unkonw error"
+                tilemaker = tilemaker.restart()
             finally:
                 if error:
                     error_name = type(error).__name__
