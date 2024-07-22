@@ -43,6 +43,12 @@ class SVGuezTilemaker():
             if headless: options.add_argument('--headless')
             self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager(cache_manager=cache_manager).install()), options=options)
         self.logger = Logger(self)
+        self.backend = backend
+        self.headless = headless
+
+    def restart(self) -> "SVGuezTilemaker":
+        self.driver.quit()
+        return SVGuezTilemaker(self.backend, self.headless)
 
     def load(self, page_url: str):
         self.driver.get(page_url)
