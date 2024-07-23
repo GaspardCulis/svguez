@@ -45,6 +45,9 @@ export default class Tilemaker {
       if (element instanceof SVGGraphicsElement) {
         // Start with unprecise but fast `getBBox` method
         let element_bbox = element.getBBox();
+        let element_ctm = element.getScreenCTM();
+        element_bbox.x += element_ctm?.e || 0;
+        element_bbox.y += element_ctm?.f || 0;
 
         if (!intersects(bbox, element_bbox)) {
           return false;
