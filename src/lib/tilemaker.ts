@@ -68,8 +68,6 @@ export default class Tilemaker {
       "viewBox",
       `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`,
     );
-    svg_tile.setAttribute("width", `${this.params.tileSize}`);
-    svg_tile.setAttribute("height", `${this.params.tileSize}`);
 
     return svg_tile;
   }
