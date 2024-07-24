@@ -31,24 +31,24 @@ class Logger():
         exit(1)
 
 class SVGuezTilemaker():
-    def __init__(self, backend: str = "chrome", headless: bool = False) -> None:
+    def __init__(self, backend: str = "chrome", headless: bool = False, cache_manager = DriverCacheManager()) -> None:
         assert backend in ["chrome", "firefox"]
-        cache_manager = DriverCacheManager()
+        self.cache_manager = cache_manager
         if backend == "chrome":
             options = webdriver.ChromeOptions()
             if headless: options.add_argument('--headless')
-            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(cache_manager=cache_manager).install()), options=options)
+            self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(cache_manager=self.cache_manager).install()), options=options)
         else:
             options = webdriver.FirefoxOptions()
             if headless: options.add_argument('--headless')
-            self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager(cache_manager=cache_manager).install()), options=options)
+            self.driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager(cache_manager=self.cache_manager).install()), options=options)
         self.logger = Logger(self)
         self.backend = backend
         self.headless = headless
 
     def restart(self) -> "SVGuezTilemaker":
         self.driver.quit()
-        return SVGuezTilemaker(self.backend, self.headless)
+        return SVGuezTilemaker(self.backend, self.headless, self.cache_manager)
 
     def load(self, page_url: str):
         self.driver.get(page_url)
