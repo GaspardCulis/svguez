@@ -11,6 +11,8 @@ python -m venv .venv
 . .venv/bin/activate
 # For Cringedows systems :
 .\.venv\Scripts\Activate.ps1
+# Install dependencies
+pip install -r requirements.txt
 ```
 
 ### svg_tilemaker.py
