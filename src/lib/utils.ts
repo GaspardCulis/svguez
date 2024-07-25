@@ -12,15 +12,14 @@ export function getTransformedBBox(element: SVGGraphicsElement): DOMRect {
   const bbox = element.getBBox();
   const ctm = element.getCTM()!;
 
-  const topLeft = element.ownerSVGElement!.createSVGPoint();
-  topLeft.x = bbox.x;
-  topLeft.y = bbox.y;
-  const topLeftTransformed = topLeft.matrixTransform(ctm);
+  const point = element.ownerSVGElement!.createSVGPoint();
+  point.x = bbox.x;
+  point.y = bbox.y;
+  const topLeftTransformed = point.matrixTransform(ctm);
 
-  const bottomRight = element.ownerSVGElement!.createSVGPoint();
-  bottomRight.x = bbox.x + bbox.width;
-  bottomRight.y = bbox.y + bbox.height;
-  const bottomRightTransformed = bottomRight.matrixTransform(ctm);
+  point.x = bbox.x + bbox.width;
+  point.y = bbox.y + bbox.height;
+  const bottomRightTransformed = point.matrixTransform(ctm);
 
   return new DOMRect(
     topLeftTransformed.x,
