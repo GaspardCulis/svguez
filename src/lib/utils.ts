@@ -8,6 +8,28 @@ export async function loadSVG(name: string): Promise<SVGSVGElement> {
     .documentElement as unknown as SVGSVGElement;
 }
 
+export function getTransformedBBox(element: SVGGraphicsElement): DOMRect {
+  const bbox = element.getBBox();
+  const ctm = element.getCTM()!;
+
+  const topLeft = element.ownerSVGElement!.createSVGPoint();
+  topLeft.x = bbox.x;
+  topLeft.y = bbox.y;
+  const topLeftTransformed = topLeft.matrixTransform(ctm);
+
+  const bottomRight = element.ownerSVGElement!.createSVGPoint();
+  bottomRight.x = bbox.x + bbox.width;
+  bottomRight.y = bbox.y + bbox.height;
+  const bottomRightTransformed = bottomRight.matrixTransform(ctm);
+
+  return new DOMRect(
+    topLeftTransformed.x,
+    topLeftTransformed.y,
+    bottomRightTransformed.x - topLeftTransformed.x,
+    bottomRightTransformed.y - topLeftTransformed.y
+  );
+}
+
 export function intersects(rect_a: DOMRect, rect_b: DOMRect): boolean {
   return !(
     rect_a.x + rect_a.width < rect_b.x ||
