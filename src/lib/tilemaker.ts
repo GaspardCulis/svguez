@@ -1,6 +1,6 @@
 import JSZip from "jszip";
 import { statsStore } from "./store";
-import { intersects } from "./utils";
+import { getTransformedBBox, intersects } from "./utils";
 import { filterSVG } from "./filter_svg";
 
 type TilemakerParams = {
@@ -44,10 +44,7 @@ export default class Tilemaker {
     const svg_tile = filterSVG(svg, (element) => {
       if (element instanceof SVGGraphicsElement) {
         // Start with unprecise but fast `getBBox` method
-        let element_bbox = element.getBBox();
-        let element_ctm = element.getScreenCTM();
-        element_bbox.x += element_ctm?.e || 0;
-        element_bbox.y += element_ctm?.f || 0;
+        let element_bbox = getTransformedBBox(element);
 
         if (!intersects(bbox, element_bbox)) {
           return false;
