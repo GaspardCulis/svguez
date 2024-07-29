@@ -8,7 +8,12 @@ export async function loadSVG(name: string): Promise<SVGSVGElement> {
     .documentElement as unknown as SVGSVGElement;
 }
 
+const bboxCache = new WeakMap<SVGGraphicsElement, DOMRect>();
 export function getTransformedBBox(element: SVGGraphicsElement): DOMRect {
+  if (bboxCache.has(element)) {
+    return bboxCache.get(element)!;
+  }
+
   const bbox = element.getBBox();
   const ctm = element.getCTM()!;
 
@@ -26,7 +31,10 @@ export function getTransformedBBox(element: SVGGraphicsElement): DOMRect {
   const xMax = Math.max(...transformedCorners.map(p => p.x));
   const yMax = Math.max(...transformedCorners.map(p => p.y));
 
-  return new DOMRect(xMin, yMin, xMax - xMin, yMax - yMin);
+  const result = new DOMRect(xMin, yMin, xMax - xMin, yMax - yMin);
+  bboxCache.set(element, result);
+
+  return result;
 }
 
 export function intersects(rect_a: DOMRect, rect_b: DOMRect): boolean {
