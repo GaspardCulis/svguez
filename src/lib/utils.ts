@@ -12,18 +12,21 @@ export function getTransformedBBox(element: SVGGraphicsElement): DOMRect {
   const bbox = element.getBBox();
   const ctm = element.getCTM()!;
 
-  const topLeft = new DOMPoint(bbox.x, bbox.y);
-  const bottomRight = new DOMPoint(bbox.x + bbox.width, bbox.y + bbox.height);
+  const corners = [
+    new DOMPoint(bbox.x, bbox.y),
+    new DOMPoint(bbox.x + bbox.width, bbox.y),
+    new DOMPoint(bbox.x + bbox.width, bbox.y + bbox.height),
+    new DOMPoint(bbox.x, bbox.y + bbox.height)
+  ];
 
-  const transformedTopLeft = topLeft.matrixTransform(ctm);
-  const transformedBottomRight = bottomRight.matrixTransform(ctm);
+  const transformedCorners = corners.map(corner => corner.matrixTransform(ctm));
 
-  return new DOMRect(
-    transformedTopLeft.x,
-    transformedTopLeft.y,
-    transformedBottomRight.x - transformedTopLeft.x,
-    transformedBottomRight.y - transformedTopLeft.y
-  );
+  const xMin = Math.min(...transformedCorners.map(p => p.x));
+  const yMin = Math.min(...transformedCorners.map(p => p.y));
+  const xMax = Math.max(...transformedCorners.map(p => p.x));
+  const yMax = Math.max(...transformedCorners.map(p => p.y));
+
+  return new DOMRect(xMin, yMin, xMax - xMin, yMax - yMin);
 }
 
 export function intersects(rect_a: DOMRect, rect_b: DOMRect): boolean {
